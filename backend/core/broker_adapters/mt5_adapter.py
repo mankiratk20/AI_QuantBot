@@ -15,7 +15,26 @@ class MT5Adapter(BaseBrokerAdapter):
         self.server = server
         self.connected = False
         self.mt5_lib = None
+        self.bridge_mode = False
+        self.bridge_data = {}
+        self.last_bridge_ping = 0.0
+        self.pending_orders = []
         self._check_mt5_installed()
+
+    def update_bridge_telemetry(self, data: Dict[str, Any]) -> List[Dict[str, Any]]:
+        import time
+        self.last_bridge_ping = time.time()
+        self.bridge_mode = True
+        self.connected = True
+        self.bridge_data = data
+
+        orders_to_send = list(self.pending_orders)
+        self.pending_orders.clear()
+        return orders_to_send
+
+    def is_bridge_active(self, timeout: float = 30.0) -> bool:
+        import time
+        return self.bridge_mode and (time.time() - self.last_bridge_ping) < timeout
 
     def _check_mt5_installed(self):
         try:
@@ -60,9 +79,31 @@ class MT5Adapter(BaseBrokerAdapter):
         return True
 
     def is_connected(self) -> bool:
+        if self.bridge_mode:
+            return self.is_bridge_active()
         return self.connected
 
     def get_account_info(self) -> Dict[str, Any]:
+        if self.bridge_mode and self.is_bridge_active():
+            b = self.bridge_data
+            balance = float(b.get("balance", 0.0))
+            equity = float(b.get("equity", 0.0))
+            return {
+                "broker": f"MetaTrader 5 Bridge ({b.get('company', 'Live')})",
+                "balance": balance,
+                "equity": equity,
+                "floating_pnl": equity - balance,
+                "used_margin": float(b.get("margin", 0.0)),
+                "free_margin": float(b.get("free_margin", 0.0)),
+                "currency": b.get("currency", "USD"),
+                "login": b.get("login", 0),
+                "server": b.get("server", "Bridge"),
+                "algo_trading_enabled": True,
+                "trade_allowed": True,
+                "is_connected": True,
+                "is_bridge": True
+            }
+
         if not self.connected or not self.mt5_lib:
             return {
                 "broker": "MetaTrader 5 (Disconnected)",
@@ -119,6 +160,30 @@ class MT5Adapter(BaseBrokerAdapter):
         take_profit: Optional[float] = None,
         comment: str = "SmartBot"
     ) -> Dict[str, Any]:
+        if self.bridge_mode and self.is_bridge_active():
+            import time
+            order_id = f"ord_{int(time.time()*1000)}"
+            order_payload = {
+                "id": order_id,
+                "action": order_type.upper(),
+                "symbol": symbol,
+                "volume": float(volume),
+                "price": float(price) if price else 0.0,
+                "sl": float(stop_loss) if stop_loss else 0.0,
+                "tp": float(take_profit) if take_profit else 0.0,
+                "comment": comment or "SmartBot Cloud"
+            }
+            self.pending_orders.append(order_payload)
+            log_audit("MT5_BRIDGE_ORDER_QUEUED", "INFO", f"Queued {order_type} {volume} {symbol} for MT5 Bridge EA")
+            return {
+                "success": True,
+                "ticket": order_id,
+                "message": f"Order queued for MT5 Bridge EA execution ({symbol} {volume} lots).",
+                "symbol": symbol,
+                "volume": volume,
+                "order_type": order_type
+            }
+
         if not self.connected or not self.mt5_lib:
             return {"success": False, "error": "MT5 is not connected"}
 
@@ -280,6 +345,9 @@ class MT5Adapter(BaseBrokerAdapter):
         return {"success": False, "error": res.comment if res else "Failed to close position"}
 
     def get_open_positions(self) -> List[Dict[str, Any]]:
+        if self.bridge_mode and self.is_bridge_active():
+            return self.bridge_data.get("positions", [])
+
         if not self.connected or not self.mt5_lib:
             return []
 

@@ -972,29 +972,41 @@
             Directly connect your real or prop-firm MetaTrader 5 account (FTMO, FundedNext, ICMarkets, Exness, etc.).
           </p>
 
-          <div style="display:flex; flex-direction:column; gap:12px; margin-bottom:16px;">
-            <div>
-              <label class="kpi-label">Account Login / ID</label>
-              <input id="mt5-login" class="input-control" style="width:100%;" type="number" placeholder="e.g. 51829102" />
+          <!-- MT5 Cloud Bridge Status Card -->
+          <div id="mt5-bridge-status-indicator" style="background:#0f172a; border:1px solid #1e293b; border-radius:8px; padding:12px; margin-bottom:14px; font-size:0.8rem;">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <span style="font-weight:600; color:#f8fafc;">Cloud Bridge EA Status:</span>
+              <span id="mt5-bridge-status-label" style="color:#f59e0b; font-weight:700;">Checking...</span>
             </div>
-            <div>
-              <label class="kpi-label">Trader Password</label>
-              <input id="mt5-password" class="input-control" style="width:100%;" type="password" placeholder="Account Password" />
-            </div>
-            <div>
-              <label class="kpi-label">Broker Server Name</label>
-              <input id="mt5-server" class="input-control" style="width:100%;" type="text" placeholder="e.g. MetaQuotes-Demo, FTMO-Server, ICMarketsSC-Live" />
+            <div style="font-size:0.72rem; color:#94a3b8; margin-top:6px; line-height:1.4;">
+              Allowed WebRequest URL in MT5: <code id="mt5-bridge-webrequest-url" style="color:#38bdf8; user-select:all;">https://ai-quant-bot-8j49.onrender.com</code>
             </div>
           </div>
 
-          <button class="btn btn-primary" style="width:100%; margin-bottom:8px;" onclick="window.app.connectMT5Account()">
-            Connect MT5 Direct (Local PC)
-          </button>
-          <a href="/api/broker/download-bridge-ea" class="btn btn-secondary btn-sm" style="width:100%; display:block; text-align:center; text-decoration:none; margin-bottom:8px; border:1px solid #3b82f6; color:#60a5fa; font-weight:600;">
-            ⬇️ Download MT5 Cloud Bridge EA (.mq5)
+          <a href="/api/broker/download-bridge-ea" class="btn btn-secondary btn-sm" style="width:100%; display:block; text-align:center; text-decoration:none; margin-bottom:12px; border:1px solid #3b82f6; color:#60a5fa; font-weight:700; padding:10px;">
+            ⬇️ Download Updated Bridge EA (SmartBot_Bridge.mq5)
           </a>
+
+          <div style="display:flex; flex-direction:column; gap:12px; margin-bottom:16px;">
+            <div>
+              <label class="kpi-label">Account Login / ID (Optional in Bridge Mode)</label>
+              <input id="mt5-login" class="input-control" style="width:100%;" type="number" placeholder="Auto-detected from EA" />
+            </div>
+            <div>
+              <label class="kpi-label">Trader Password (Only for Local PC)</label>
+              <input id="mt5-password" class="input-control" style="width:100%;" type="password" placeholder="Account Password" />
+            </div>
+            <div>
+              <label class="kpi-label">Broker Server Name (Optional in Bridge Mode)</label>
+              <input id="mt5-server" class="input-control" style="width:100%;" type="text" placeholder="Auto-detected from EA" />
+            </div>
+          </div>
+
+          <button id="btn-connect-mt5" class="btn btn-primary" style="width:100%; margin-bottom:8px;" onclick="window.app.connectMT5Account()">
+            🔗 Connect MT5 / Verify Cloud Bridge
+          </button>
           <div style="font-size:0.75rem; color:#94a3b8; text-align:center; line-height:1.4;">
-            💡 <strong>Cloud Users:</strong> You do NOT need to install Python or run any terminal commands! Simply download the Bridge EA above, drop it in your MT5 Experts folder, and enable Algo Trading.
+            💡 <strong>How to connect MT5:</strong> Download the EA above, attach it to any chart in MT5 with <strong>Algo Trading ON</strong>, and add the WebRequest URL. The bot will automatically detect your balance and trade.
           </div>
         </div>
 

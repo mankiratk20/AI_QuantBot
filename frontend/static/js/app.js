@@ -1231,19 +1231,35 @@ class SmartBotApp {
     } catch (e) {
       console.error("Failed to fetch broker config:", e);
     }
+    this.checkMT5BridgeStatus();
+  }
+
+  async checkMT5BridgeStatus() {
+    const label = document.getElementById("mt5-bridge-status-label");
+    const webrequestUrl = document.getElementById("mt5-bridge-webrequest-url");
+    if (webrequestUrl) {
+      webrequestUrl.innerText = window.location.origin;
+    }
+    if (!label) return;
+    try {
+      const res = await fetch("/api/bridge/status");
+      const data = await res.json();
+      if (data.active && data.account) {
+        label.innerHTML = `<span style="color:#10b981;">🟢 Live Connected (Acc #${data.account.login || "N/A"} - $${Number(data.account.balance || 0).toLocaleString()})</span>`;
+      } else {
+        label.innerHTML = `<span style="color:#f59e0b;">⏳ Waiting for MT5 EA ping...</span>`;
+      }
+    } catch (e) {
+      label.innerText = "Offline";
+    }
   }
 
   async connectMT5Account() {
-    const login = document.getElementById("mt5-login").value;
-    const password = document.getElementById("mt5-password").value;
-    const server = document.getElementById("mt5-server").value;
+    const login = (document.getElementById("mt5-login")?.value || "").trim();
+    const password = (document.getElementById("mt5-password")?.value || "").trim();
+    const server = (document.getElementById("mt5-server")?.value || "").trim();
 
-    if (!login || !password || !server) {
-      alert("Please provide MT5 Login ID, Password, and Broker Server Name.");
-      return;
-    }
-
-    this.showToast("Connecting to MetaTrader 5 terminal...", "info");
+    this.showToast("Verifying MT5 connection / Cloud Bridge...", "info");
     try {
       const res = await fetch("/api/broker/connect", {
         method: "POST",
@@ -1258,6 +1274,7 @@ class SmartBotApp {
         this.showToast(data.message, "success");
         await this.fetchBrokerConfig();
         await this.refreshDashboard();
+        this.checkMT5BridgeStatus();
       } else {
         alert(data.message || "Failed to connect to MT5.");
       }

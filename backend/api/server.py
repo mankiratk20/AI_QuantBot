@@ -953,17 +953,33 @@ def connect_real_broker():
         if not mt5_broker.mt5_lib:
             import sys
             if sys.platform != "win32":
-                message = "Cloud Execution Notice: This cloud server runs on high-availability web infrastructure. Clients do NOT need to install Python or run any terminal commands! To trade on MetaTrader 5, download the SmartBot Bridge EA (via the button below) and attach it to your personal MT5 terminal, or connect directly via Binance API / cTrader Open API."
+                if mt5_broker.is_bridge_active():
+                    active_broker = mt5_broker
+                    login = mt5_broker.bridge_data.get("login", "N/A")
+                    server_name = mt5_broker.bridge_data.get("server", "Bridge")
+                    message = f"Successfully connected to MT5 Cloud Bridge (Account #{login} on {server_name})!"
+                    success = True
+                else:
+                    message = (
+                        "MT5 Cloud Bridge EA is not sending live data yet! "
+                        "Please check your MetaTrader 5 terminal: "
+                        "1) In MT5 top toolbar, click 'Algo Trading' to turn it GREEN. "
+                        "2) Go to Tools -> Options -> Expert Advisors -> check 'Allow WebRequest for listed URL' and add: https://ai-quant-bot-8j49.onrender.com "
+                        "3) Attach 'SmartBot_Bridge.mq5' to any chart and ensure the top-right corner shows a smiley face. "
+                        "Once attached, click Connect MT5 again!"
+                    )
+                    return jsonify({"success": False, "message": message}), 400
             else:
                 message = "MetaTrader5 Python connector library is not installed on this Windows PC. To connect directly to your local MT5 terminal, run: pip install MetaTrader5"
-            return jsonify({"success": False, "message": message}), 400
-        success = mt5_broker.connect(credentials)
-        if success:
-            active_broker = mt5_broker
-            message = f"Successfully connected to MetaTrader 5 ({credentials.get('server')}) account #{credentials.get('login')}!"
+                return jsonify({"success": False, "message": message}), 400
         else:
-            message = f"Failed to connect to MT5 server '{credentials.get('server')}'. Please check your Login ID, Password, and ensure the MT5 terminal is running."
-            return jsonify({"success": False, "message": message}), 400
+            success = mt5_broker.connect(credentials)
+            if success:
+                active_broker = mt5_broker
+                message = f"Successfully connected to MetaTrader 5 ({credentials.get('server')}) account #{credentials.get('login')}!"
+            else:
+                message = f"Failed to connect to MT5 server '{credentials.get('server')}'. Please check your Login ID, Password, and ensure the MT5 terminal is running."
+                return jsonify({"success": False, "message": message}), 400
 
     elif broker_name == "binance":
         success = binance_broker.connect(credentials)
@@ -1068,6 +1084,28 @@ def download_bridge_ea():
     if os.path.exists(ea_path):
         return send_file(ea_path, as_attachment=True, download_name="SmartBot_Bridge.mq5")
     return jsonify({"error": "Bridge EA file not found."}), 404
+
+@app.route("/api/bridge/sync", methods=["POST"])
+def bridge_sync():
+    global active_broker
+    data = request.json or {}
+    orders = mt5_broker.update_bridge_telemetry(data)
+    # If currently paper simulator, switch active broker to MT5 bridge automatically
+    if active_broker == paper_broker or not active_broker.is_connected():
+        active_broker = mt5_broker
+    return jsonify({
+        "status": "ok",
+        "orders": orders,
+        "server_time": time.time()
+    })
+
+@app.route("/api/bridge/status", methods=["GET"])
+def bridge_status():
+    is_active = mt5_broker.is_bridge_active()
+    return jsonify({
+        "active": is_active,
+        "account": mt5_broker.bridge_data if is_active else None
+    })
 
 @app.route("/api/settings/mode", methods=["POST"])
 def set_trading_mode():
