@@ -1284,42 +1284,6 @@
         </div>
       </form>
 
-      <!-- Quick Email Dispatch Setup Modal / Collapsible -->
-      <div style="margin-top:24px; padding-top:16px; border-top:1px solid #1e293b; text-align:center;">
-        <button type="button" onclick="window.app.toggleEmailConfig()" class="btn btn-sm" style="background:#0f172a; border:1px solid #334155; color:#94a3b8; font-size:0.78rem; padding:5px 12px; border-radius:6px; cursor:pointer;">
-          ⚙️ Configure Email Sender (Resend / Brevo API)
-        </button>
-        <div id="auth-email-config-drawer" style="display:none; text-align:left; background:#0b132b; border:1px solid #1e293b; border-radius:8px; padding:14px; margin-top:12px;">
-          <div style="font-weight:700; font-size:0.85rem; color:#f8fafc; margin-bottom:6px;">Connect Outgoing Email Dispatch</div>
-          <div style="font-size:0.75rem; color:#94a3b8; margin-bottom:10px; line-height:1.4;">
-            Paste your <strong>Resend API Key</strong> (or Brevo API Key) below. The bot saves it immediately so OTP emails deliver live to your inbox without configuring SMTP.
-          </div>
-          <div style="background:#1e293b; border-left:3px solid #38bdf8; padding:8px 10px; border-radius:4px; font-size:0.72rem; color:#cbd5e1; margin-bottom:12px; line-height:1.4;">
-            💡 <strong>Resend Free Tier Restriction:</strong> On a free account, Resend only delivers test emails to the exact email address you signed up with on Resend (e.g. <code>workingamrit123@gmail.com</code>). Register/log in on the bot using that email to receive OTPs instantly, or verify a custom domain at resend.com/domains.
-          </div>
-          <div style="margin-bottom:10px;">
-            <label class="kpi-label" style="font-size:0.72rem;">Resend API Key (starts with re_)</label>
-            <input id="cfg-input-resend-key" class="input-control" style="width:100%; font-family:monospace; font-size:0.8rem;" type="password" placeholder="re_xxxxxxxxxxxxxx" />
-          </div>
-          <div style="margin-bottom:12px;">
-            <label class="kpi-label" style="font-size:0.72rem;">Or Brevo API Key (starts with xkeysib-)</label>
-            <input id="cfg-input-brevo-key" class="input-control" style="width:100%; font-family:monospace; font-size:0.8rem;" type="password" placeholder="xkeysib-xxxxxxxxxxxxxx" />
-          </div>
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
-            <span id="cfg-email-status-badge" style="font-size:0.72rem; color:#94a3b8;">Status: Checking...</span>
-            <button type="button" onclick="window.app.saveEmailConfig()" class="btn btn-sm btn-primary" style="font-size:0.75rem;">Save & Activate</button>
-          </div>
-          <div style="border-top:1px dashed #1e293b; padding-top:10px; margin-top:8px;">
-            <label class="kpi-label" style="font-size:0.72rem;">Test Delivery to Email</label>
-            <div style="display:flex; gap:6px;">
-              <input id="cfg-input-test-email" class="input-control" style="flex:1; font-size:0.78rem;" type="email" placeholder="workingamrit123@gmail.com" />
-              <button id="btn-test-email" type="button" onclick="window.app.testEmailConfig()" class="btn btn-sm btn-secondary" style="font-size:0.75rem; white-space:nowrap;">Send Test</button>
-            </div>
-            <div id="cfg-test-email-msg" style="font-size:0.72rem; margin-top:5px; display:none;"></div>
-          </div>
-        </div>
-      </div>
-
     </div>
   </div>
 
