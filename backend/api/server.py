@@ -9,7 +9,7 @@ import json
 import time
 from datetime import datetime, timezone
 from typing import Dict, Any, List, Optional
-from flask import Flask, request, jsonify, Response, send_from_directory, render_template, session
+from flask import Flask, request, jsonify, Response, send_from_directory, render_template, session, send_file
 
 from backend.config import BASE_DIR, INSTRUMENT_SPECS, TIMEFRAMES, DEFAULT_RISK_CONFIG, PROP_FIRM_PRESETS
 from backend.storage.db import init_db, get_connection, log_audit
@@ -951,7 +951,11 @@ def connect_real_broker():
 
     if broker_name == "mt5":
         if not mt5_broker.mt5_lib:
-            message = "MetaTrader5 Python connector library is not installed. To connect directly to your MT5 desktop terminal, run: pip install MetaTrader5"
+            import sys
+            if sys.platform != "win32":
+                message = "Cloud Execution Notice: This cloud server runs on high-availability web infrastructure. Clients do NOT need to install Python or run any terminal commands! To trade on MetaTrader 5, download the SmartBot Bridge EA (via the button below) and attach it to your personal MT5 terminal, or connect directly via Binance API / cTrader Open API."
+            else:
+                message = "MetaTrader5 Python connector library is not installed on this Windows PC. To connect directly to your local MT5 terminal, run: pip install MetaTrader5"
             return jsonify({"success": False, "message": message}), 400
         success = mt5_broker.connect(credentials)
         if success:
@@ -1057,6 +1061,13 @@ def disconnect_real_broker():
 
     log_audit("BROKER_DISCONNECTED", "INFO", f"User {uid} disconnected real broker; reverted to Paper Simulator.")
     return jsonify({"success": True, "broker": active_broker.get_account_info()})
+
+@app.route("/api/broker/download-bridge-ea", methods=["GET"])
+def download_bridge_ea():
+    ea_path = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), "mt5_bridge", "SmartBot_Bridge.mq5")
+    if os.path.exists(ea_path):
+        return send_file(ea_path, as_attachment=True, download_name="SmartBot_Bridge.mq5")
+    return jsonify({"error": "Bridge EA file not found."}), 404
 
 @app.route("/api/settings/mode", methods=["POST"])
 def set_trading_mode():

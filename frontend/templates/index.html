@@ -987,11 +987,14 @@
             </div>
           </div>
 
-          <button class="btn btn-primary" style="width:100%;" onclick="window.app.connectMT5Account()">
-            Connect MT5 Real Account
+          <button class="btn btn-primary" style="width:100%; margin-bottom:8px;" onclick="window.app.connectMT5Account()">
+            Connect MT5 Direct (Local PC)
           </button>
-          <div style="margin-top:8px; font-size:0.75rem; color:#94a3b8; text-align:center;">
-            Requires MetaTrader 5 desktop terminal running on your PC.
+          <a href="/api/broker/download-bridge-ea" class="btn btn-secondary btn-sm" style="width:100%; display:block; text-align:center; text-decoration:none; margin-bottom:8px; border:1px solid #3b82f6; color:#60a5fa; font-weight:600;">
+            ⬇️ Download MT5 Cloud Bridge EA (.mq5)
+          </a>
+          <div style="font-size:0.75rem; color:#94a3b8; text-align:center; line-height:1.4;">
+            💡 <strong>Cloud Users:</strong> You do NOT need to install Python or run any terminal commands! Simply download the Bridge EA above, drop it in your MT5 Experts folder, and enable Algo Trading.
           </div>
         </div>
 
