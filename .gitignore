@@ -1,0 +1,20 @@
+# Environment variables & secrets (CRITICAL: Do NOT push to GitHub)
+.env
+.env.local
+
+# Python caches
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+
+# Local databases & mailboxes
+data/*.db
+data/*.db-journal
+data/*.json
+backend/storage/calendar_cache.json
+
+# System & OS
+.DS_Store
+Thumbs.db
