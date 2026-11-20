@@ -185,7 +185,7 @@ class SmartBotApp {
         if (confirm(`Are you sure you want to ${action} the Emergency Kill Switch?`)) {
           await fetch("/api/settings/kill-switch", {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
+            headers: { "Content-Type": "application/json", ...this.getAuthHeaders() },
             body: JSON.stringify({ active: !isCurrentlyActive })
           });
           await this.refreshDashboard();
@@ -198,7 +198,10 @@ class SmartBotApp {
     if (closeAllBtn) {
       closeAllBtn.addEventListener("click", async () => {
         if (confirm("WARNING: Forcibly close ALL open positions right now?")) {
-          const res = await fetch("/api/positions/close-all", { method: "POST" });
+          const res = await fetch("/api/positions/close-all", {
+            method: "POST",
+            headers: { "Content-Type": "application/json", ...this.getAuthHeaders() }
+          });
           const data = await res.json();
           this.showToast(`Closed ${data.closed_count} positions immediately.`, "danger");
           this.fetchPositions();
@@ -213,7 +216,10 @@ class SmartBotApp {
         scanBtn.innerText = "Scanning Market Structure...";
         scanBtn.disabled = true;
         try {
-          const res = await fetch("/api/signals/scan", { method: "POST" });
+          const res = await fetch("/api/signals/scan", {
+            method: "POST",
+            headers: { "Content-Type": "application/json", ...this.getAuthHeaders() }
+          });
           const data = await res.json();
           if (data.signals_generated_count > 0) {
             this.showToast(`AI Scan Complete: ${data.signals_generated_count} qualifying setup(s) found!`, "success");
@@ -244,7 +250,7 @@ class SmartBotApp {
         }
         await fetch("/api/settings/mode", {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: { "Content-Type": "application/json", ...this.getAuthHeaders() },
           body: JSON.stringify({ mode })
         });
         this.showToast(`Trading Mode switched to ${mode.toUpperCase()}`, "info");
@@ -253,7 +259,13 @@ class SmartBotApp {
   }
 
   initSSEStream() {
-    this.eventSource = new EventSource("/api/stream/events");
+    if (this.eventSource) {
+      try { this.eventSource.close(); } catch(e) {}
+    }
+    const url = this.authToken
+      ? `/api/stream/events?token=${encodeURIComponent(this.authToken)}`
+      : `/api/stream/events`;
+    this.eventSource = new EventSource(url);
     this.eventSource.onmessage = (event) => {
       try {
         const data = JSON.parse(event.data);
@@ -370,8 +382,11 @@ class SmartBotApp {
 
   async refreshDashboard() {
     try {
-      const res = await fetch("/api/status");
+      const res = await fetch("/api/status", {
+        headers: this.getAuthHeaders()
+      });
       const data = await res.json();
+      if (!res.ok || data.error) return;
       const acc = data.account || {};
 
       this.activeCurrency = acc.currency || "USD";
@@ -540,12 +555,14 @@ class SmartBotApp {
   }
 
   async fetchSignals() {
-    const res = await fetch("/api/signals");
+    const res = await fetch("/api/signals", {
+      headers: this.getAuthHeaders()
+    });
     const signals = await res.json();
     const container = document.getElementById("signals-feed-container");
     if (!container) return;
 
-    if (signals.length === 0) {
+    if (!signals || !Array.isArray(signals) || signals.length === 0) {
       container.innerHTML = `<div style="color:#94a3b8; text-align:center; padding:30px;">No active trade signals. Click 'Scan Live Setups' above to run the strategy engine.</div>`;
       return;
     }
@@ -589,7 +606,10 @@ class SmartBotApp {
   }
 
   async approveSignal(signalId) {
-    const res = await fetch(`/api/signals/approve/${signalId}`, { method: "POST" });
+    const res = await fetch(`/api/signals/approve/${signalId}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", ...this.getAuthHeaders() }
+    });
     const data = await res.json();
     if (data.success) {
       this.showToast(`Signal authorized! Executed ticket #${data.ticket}`, "success");
@@ -600,22 +620,27 @@ class SmartBotApp {
   }
 
   async rejectSignal(signalId) {
-    await fetch(`/api/signals/reject/${signalId}`, { method: "POST" });
+    await fetch(`/api/signals/reject/${signalId}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", ...this.getAuthHeaders() }
+    });
     this.showToast("Signal declined.", "info");
     this.fetchSignals();
   }
 
   async fetchPositions() {
-    const res = await fetch("/api/positions");
+    const res = await fetch("/api/positions", {
+      headers: this.getAuthHeaders()
+    });
     const positions = await res.json();
-    this.renderPositionsTable(positions);
+    this.renderPositionsTable(Array.isArray(positions) ? positions : []);
   }
 
   renderPositionsTable(positions) {
     const tbody = document.getElementById("positions-table-body");
     if (!tbody) return;
 
-    if (positions.length === 0) {
+    if (!positions || positions.length === 0) {
       tbody.innerHTML = `<tr><td colspan="9" style="text-align:center; color:#94a3b8; padding:20px;">No open positions currently active.</td></tr>`;
       return;
     }
@@ -647,7 +672,10 @@ class SmartBotApp {
 
   async closePosition(ticket) {
     if (confirm(`Close position #${ticket} now?`)) {
-      const res = await fetch(`/api/positions/close/${ticket}`, { method: "POST" });
+      const res = await fetch(`/api/positions/close/${ticket}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", ...this.getAuthHeaders() }
+      });
       const data = await res.json();
       if (data.success) {
         this.showToast(`Position #${ticket} closed. Realized PnL: $${data.realized_pnl}`, "info");
@@ -658,7 +686,9 @@ class SmartBotApp {
 
   async fetchPropFirm() {
     try {
-      const res = await fetch("/api/prop-firm");
+      const res = await fetch("/api/prop-firm", {
+        headers: this.getAuthHeaders()
+      });
       const data = await res.json();
       const curr = data.connected_currency || "USD";
 
@@ -722,7 +752,7 @@ class SmartBotApp {
     try {
       const res = await fetch("/api/prop-firm/sync", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", ...this.getAuthHeaders() },
         body: JSON.stringify({})
       });
       const data = await res.json();
@@ -738,7 +768,7 @@ class SmartBotApp {
     try {
       await fetch("/api/prop-firm/profile", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", ...this.getAuthHeaders() },
         body: JSON.stringify({ profile_name: profile, starting_balance: tier })
       });
       this.showToast(`Prop firm profile set to ${profile}`, "info");
@@ -753,7 +783,7 @@ class SmartBotApp {
     try {
       await fetch("/api/prop-firm/profile", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", ...this.getAuthHeaders() },
         body: JSON.stringify({ profile_name: profile, starting_balance: parseFloat(tier) })
       });
       this.showToast(`Challenge size set to $${Number(tier).toLocaleString()}`, "info");
@@ -952,12 +982,14 @@ class SmartBotApp {
   }
 
   async fetchJournal() {
-    const res = await fetch("/api/journal");
+    const res = await fetch("/api/journal", {
+      headers: this.getAuthHeaders()
+    });
     const entries = await res.json();
     const container = document.getElementById("journal-entries-container");
     if (!container) return;
 
-    if (entries.length === 0) {
+    if (!entries || !Array.isArray(entries) || entries.length === 0) {
       container.innerHTML = `<div style="text-align:center; color:#94a3b8; padding:30px;">No trades logged yet. Closed positions are automatically recorded here.</div>`;
       return;
     }
@@ -991,8 +1023,11 @@ class SmartBotApp {
   }
 
   async fetchAnalytics() {
-    const res = await fetch("/api/analytics");
+    const res = await fetch("/api/analytics", {
+      headers: this.getAuthHeaders()
+    });
     const data = await res.json();
+    if (!res.ok || data.error) return;
     document.getElementById("analytics-total-trades").innerText = data.total_trades;
     document.getElementById("analytics-win-rate").innerText = `${data.win_rate}%`;
     document.getElementById("analytics-total-pnl").innerText = `$${data.total_profit.toFixed(2)}`;
@@ -1145,11 +1180,14 @@ class SmartBotApp {
   }
 
   async fetchNotifications() {
-    const res = await fetch("/api/notifications");
+    const res = await fetch("/api/notifications", {
+      headers: this.getAuthHeaders()
+    });
     const notifs = await res.json();
     const container = document.getElementById("notifications-feed-container");
     if (!container) return;
 
+    if (!notifs || !Array.isArray(notifs)) return;
     container.innerHTML = "";
     notifs.forEach((n) => {
       const card = document.createElement("div");
@@ -1167,11 +1205,14 @@ class SmartBotApp {
   }
 
   async fetchAuditLogs() {
-    const res = await fetch("/api/audit-logs");
+    const res = await fetch("/api/audit-logs", {
+      headers: this.getAuthHeaders()
+    });
     const logs = await res.json();
     const tbody = document.getElementById("audit-logs-body");
     if (!tbody) return;
 
+    if (!logs || !Array.isArray(logs)) return;
     tbody.innerHTML = "";
     logs.forEach((l) => {
       const tr = document.createElement("tr");
@@ -1187,8 +1228,11 @@ class SmartBotApp {
 
   async fetchBrokerConfig() {
     try {
-      const res = await fetch("/api/broker/config");
+      const res = await fetch("/api/broker/config", {
+        headers: this.getAuthHeaders()
+      });
       const data = await res.json();
+      if (!res.ok || data.error) return;
       const b = data.active_broker || {};
 
       this.activeCurrency = b.currency || "USD";
@@ -1272,7 +1316,7 @@ class SmartBotApp {
     try {
       const res = await fetch("/api/broker/connect", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", ...this.getAuthHeaders() },
         body: JSON.stringify({
           broker: "mt5",
           credentials: {}
@@ -1307,7 +1351,7 @@ class SmartBotApp {
     try {
       const res = await fetch("/api/broker/connect", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", ...this.getAuthHeaders() },
         body: JSON.stringify({
           broker: "binance",
           credentials: { api_key: apiKey, api_secret: apiSecret, testnet }
@@ -1339,7 +1383,7 @@ class SmartBotApp {
     try {
       const res = await fetch("/api/broker/connect", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", ...this.getAuthHeaders() },
         body: JSON.stringify({
           broker: "ctrader",
           credentials: { client_id: clientId, client_secret: clientSecret, account_id: accountId }
@@ -1360,7 +1404,10 @@ class SmartBotApp {
 
   async switchToPaperBroker() {
     if (confirm("Switch back to the Risk-Free Paper Trading Simulator?")) {
-      const res = await fetch("/api/broker/disconnect", { method: "POST" });
+      const res = await fetch("/api/broker/disconnect", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", ...this.getAuthHeaders() }
+      });
       const data = await res.json();
       this.showToast("Switched back to Paper Trading Simulator.", "info");
       await this.fetchBrokerConfig();
@@ -1510,7 +1557,7 @@ class SmartBotApp {
     try {
       const res = await fetch("/api/trade/place", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", ...this.getAuthHeaders() },
         body: JSON.stringify({
           symbol,
           direction,
@@ -1556,7 +1603,10 @@ class SmartBotApp {
     if (container) container.innerText = "Evaluating user strategy rules on " + this.activeSymbol + "...";
 
     try {
-      const res = await fetch("/api/signals/scan", { method: "POST" });
+      const res = await fetch("/api/signals/scan", {
+        method: "POST",
+        headers: this.getAuthHeaders()
+      });
       const data = await res.json();
       const symbolSignals = (data.signals || []).filter(s => s.signal && s.signal.symbol === this.activeSymbol);
 

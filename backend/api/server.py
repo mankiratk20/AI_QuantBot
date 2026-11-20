@@ -364,7 +364,7 @@ def auth_test_email():
 
 @app.route("/api/auth/logout", methods=["POST"])
 def auth_logout():
-    session.pop("user_id", None)
+    session.clear()
     return jsonify({"success": True, "message": "Logged out successfully."})
 
 @app.route("/api/auth/me", methods=["GET"])
@@ -1274,20 +1274,23 @@ def stream_events():
 
     def event_stream():
         while True:
+            # Dynamically resolve user broker in case user switched broker config
+            user_broker = get_user_broker(uid)
+
             # Update a micro-tick on active instruments
             for sym in ["EURUSD", "GBPUSD", "XAUUSD", "BTCUSD"]:
                 q = market_data.update_live_tick(sym)
-                # Mark-to-market open positions
-                active_broker.update_live_quote(sym, q["bid"], q["ask"])
+                # Mark-to-market open positions strictly for THIS user's broker
+                user_broker.update_live_quote(sym, q["bid"], q["ask"])
 
             # Run active trade monitor (break-even, partial TP, trailing SL)
             actions = trade_monitor.check_and_manage_positions(market_data)
 
-            # Package state payload
+            # Package state payload EXCLUSIVELY for this authenticated user
             payload = {
                 "quotes": {s: market_data.get_quote(s) for s in ["EURUSD", "GBPUSD", "XAUUSD", "BTCUSD", "US30", "GBPJPY"]},
-                "account": active_broker.get_account_info(),
-                "positions": active_broker.get_open_positions(),
+                "account": user_broker.get_account_info(),
+                "positions": user_broker.get_open_positions(),
                 "actions": actions,
                 "timestamp": time.time()
             }
