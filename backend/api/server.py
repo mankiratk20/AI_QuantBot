@@ -51,6 +51,47 @@ ctrader_broker = CTraderAdapter()
 
 active_broker = paper_broker
 
+# Per-user isolated paper broker instances
+_user_paper_brokers: Dict[str, PaperBroker] = {}
+
+def get_user_broker(uid: Optional[str]):
+    """
+    Resolves the strictly isolated broker adapter instance for the authenticated user.
+    Ensures new users and paper traders NEVER see or interact with another user's connected MT5 broker.
+    """
+    if not uid:
+        return paper_broker
+
+    conn = get_connection()
+    cursor = conn.cursor()
+    cursor.execute("SELECT broker, credentials FROM user_broker_configs WHERE user_id = ?", (uid,))
+    row = cursor.fetchone()
+    conn.close()
+
+    if row:
+        b_type = (row["broker"] or "paper").lower()
+        try:
+            creds = json.loads(row["credentials"])
+        except Exception:
+            creds = {}
+
+        if b_type == "mt5":
+            return mt5_broker
+        elif b_type == "binance":
+            return binance_broker
+        elif b_type == "ctrader":
+            return ctrader_broker
+        elif b_type == "paper":
+            bal = float(creds.get("initial_balance", 10000.0))
+            if uid not in _user_paper_brokers:
+                _user_paper_brokers[uid] = PaperBroker(initial_balance=bal)
+            return _user_paper_brokers[uid]
+
+    # For new users who haven't connected MT5/Binance: dedicated isolated Paper Broker
+    if uid not in _user_paper_brokers:
+        _user_paper_brokers[uid] = PaperBroker(initial_balance=10000.0)
+    return _user_paper_brokers[uid]
+
 execution_engine = ExecutionEngine(
     broker=active_broker,
     risk_manager=risk_mgr,
@@ -344,12 +385,13 @@ def get_system_status():
     if err:
         return err
 
-    acc = active_broker.get_account_info()
+    user_broker = get_user_broker(uid)
+    acc = user_broker.get_account_info()
     risk_mgr.config["account_balance"] = acc["balance"]
     risk_mgr.config["account_currency"] = acc["currency"]
     prop_firm.update_account_state(acc["balance"], acc["equity"])
     prop_metrics = prop_firm.get_metrics()
-    open_positions = active_broker.get_open_positions()
+    open_positions = user_broker.get_open_positions()
 
     active_strats = [s for s in strategy_engine.get_all_strategies(user_id=uid) if s.get("is_active")]
 
@@ -578,18 +620,20 @@ def place_manual_order():
     tp = float(data.get("take_profit")) if data.get("take_profit") else None
     comment = data.get("comment", f"User Manual Order ({uid})")
 
+    user_broker = get_user_broker(uid)
+
     # 1. Kill Switch Check
     if risk_mgr.config.get("emergency_kill_switch_active", False):
         return jsonify({"success": False, "error": "Emergency Kill Switch is active. Trading is locked."}), 400
 
     # 2. Prop firm check
-    open_pos = active_broker.get_open_positions()
+    open_pos = user_broker.get_open_positions()
     prop_ok, prop_reason = prop_firm.can_open_new_trade(volume, len(open_pos))
     if not prop_ok:
         return jsonify({"success": False, "error": prop_reason}), 400
 
-    # 3. Dispatch to active broker
-    order_res = active_broker.place_order(
+    # 3. Dispatch to user's active broker
+    order_res = user_broker.place_order(
         symbol=symbol,
         order_type=direction if order_type == "MARKET" else f"{direction}_{order_type}",
         volume=volume,
@@ -609,7 +653,7 @@ def place_manual_order():
         )
         notif_mgr.send_alert(
             title=f"Order Filled: {direction} {volume} {symbol}",
-            message=f"Filled at {fill_price} on {active_broker.get_account_info().get('broker')}. Ticket #{ticket}",
+            message=f"Filled at {fill_price} on {user_broker.get_account_info().get('broker')}. Ticket #{ticket}",
             category="EXECUTION",
             level="success",
             data=order_res
@@ -626,7 +670,8 @@ def get_positions():
     uid, err = ensure_authenticated()
     if err:
         return err
-    positions = active_broker.get_open_positions()
+    user_broker = get_user_broker(uid)
+    positions = user_broker.get_open_positions()
     return jsonify(positions)
 
 @app.route("/api/positions/close/<ticket>", methods=["POST"])
@@ -636,7 +681,8 @@ def close_position(ticket):
         return err
     data = request.json or {}
     vol = data.get("volume")
-    res = active_broker.close_position(ticket, volume=vol, close_reason=f"User Close ({uid})")
+    user_broker = get_user_broker(uid)
+    res = user_broker.close_position(ticket, volume=vol, close_reason=f"User Close ({uid})")
     return jsonify(res)
 
 @app.route("/api/positions/modify/<ticket>", methods=["POST"])
@@ -647,7 +693,8 @@ def modify_position(ticket):
     data = request.json or {}
     sl = data.get("stop_loss")
     tp = data.get("take_profit")
-    success = active_broker.modify_order(ticket, stop_loss=sl, take_profit=tp)
+    user_broker = get_user_broker(uid)
+    success = user_broker.modify_order(ticket, stop_loss=sl, take_profit=tp)
     return jsonify({"success": success, "ticket": ticket})
 
 @app.route("/api/positions/close-all", methods=["POST"])
@@ -655,10 +702,11 @@ def emergency_close_all():
     uid, err = ensure_authenticated()
     if err:
         return err
-    open_pos = active_broker.get_open_positions()
+    user_broker = get_user_broker(uid)
+    open_pos = user_broker.get_open_positions()
     closed = []
     for p in open_pos:
-        r = active_broker.close_position(p["ticket"], close_reason=f"Emergency Close All ({uid})")
+        r = user_broker.close_position(p["ticket"], close_reason=f"Emergency Close All ({uid})")
         closed.append(r)
     log_audit("EMERGENCY_CLOSE_ALL", "WARNING", f"User {uid} closed all {len(closed)} open positions immediately.")
     notif_mgr.send_alert("Emergency Close All", f"All {len(closed)} positions were forcibly closed.", category="RISK", level="danger")
@@ -670,7 +718,8 @@ def get_prop_firm_status():
     uid, err = ensure_authenticated()
     if err:
         return err
-    acc = active_broker.get_account_info()
+    user_broker = get_user_broker(uid)
+    acc = user_broker.get_account_info()
     prop_firm.update_account_state(acc.get("balance", 10000.0), acc.get("equity", 10000.0))
     metrics = prop_firm.get_metrics()
     metrics["connected_broker"] = acc.get("broker", "Paper Simulator")
@@ -697,7 +746,8 @@ def sync_prop_firm_with_account():
     if err:
         return err
     data = request.json or {}
-    acc = active_broker.get_account_info()
+    user_broker = get_user_broker(uid)
+    acc = user_broker.get_account_info()
     server = data.get("server") or ""
     metrics = prop_firm.sync_with_connected_account(
         broker_name=acc.get("broker", "Paper Simulator"),
@@ -923,7 +973,10 @@ def get_broker_config():
 
     if row:
         saved_broker_type = row["broker"]
-        saved_cfg = {"broker": saved_broker_type, "credentials": json.loads(row["credentials"])}
+        try:
+            saved_cfg = {"broker": saved_broker_type, "credentials": json.loads(row["credentials"])}
+        except Exception:
+            saved_cfg = {"broker": saved_broker_type, "credentials": {}}
     else:
         saved_broker_type = "paper"
         saved_cfg = {"broker": "paper", "credentials": {"initial_balance": 10000.0}}
@@ -935,8 +988,9 @@ def get_broker_config():
     if "api_secret" in masked_creds:
         masked_creds["api_secret"] = "••••••••"
 
+    user_broker = get_user_broker(uid)
     return jsonify({
-        "active_broker": active_broker.get_account_info(),
+        "active_broker": user_broker.get_account_info(),
         "saved_broker_type": saved_broker_type,
         "credentials": masked_creds
     })
@@ -957,14 +1011,16 @@ def connect_real_broker():
 
     if broker_name == "mt5":
         if mt5_broker.is_bridge_active():
-            active_broker = mt5_broker
-            execution_engine.broker = active_broker
-            trade_monitor.broker = active_broker
             login = mt5_broker.bridge_data.get("login", "N/A")
             server_name = mt5_broker.bridge_data.get("server", "Bridge")
             bal = float(mt5_broker.bridge_data.get("balance", 0.0))
             message = f"Successfully linked to MT5 Cloud Bridge! Account #{login} on {server_name} (Balance: ${bal:,.2f})."
             success = True
+            credentials = {
+                "login": login,
+                "server": server_name,
+                "bridge": True
+            }
         elif not mt5_broker.mt5_lib:
             import sys
             if sys.platform != "win32":
@@ -983,7 +1039,6 @@ def connect_real_broker():
         else:
             success = mt5_broker.connect(credentials)
             if success:
-                active_broker = mt5_broker
                 message = f"Successfully connected to MetaTrader 5 ({credentials.get('server')}) account #{credentials.get('login')}!"
             else:
                 message = f"Failed to connect to MT5 server '{credentials.get('server')}'. Please check your Login ID, Password, and ensure the MT5 terminal is running."
@@ -992,7 +1047,6 @@ def connect_real_broker():
     elif broker_name == "binance":
         success = binance_broker.connect(credentials)
         if success:
-            active_broker = binance_broker
             message = "Successfully connected to Binance Futures account!"
         else:
             message = "Failed to connect to Binance. Please verify your API Key and Secret."
@@ -1001,7 +1055,6 @@ def connect_real_broker():
     elif broker_name == "ctrader":
         success = ctrader_broker.connect(credentials)
         if success:
-            active_broker = ctrader_broker
             message = f"Successfully connected to cTrader Open API (Account #{credentials.get('account_id')})!"
         else:
             message = "Failed to connect to cTrader Open API. Please verify Client ID and Secret."
@@ -1010,26 +1063,14 @@ def connect_real_broker():
     else:
         # Paper broker
         bal = float(credentials.get("initial_balance", 10000.0))
-        paper_broker.balance = bal
-        paper_broker.initial_balance = bal
-        paper_broker.equity = bal
-        active_broker = paper_broker
+        if uid not in _user_paper_brokers:
+            _user_paper_brokers[uid] = PaperBroker(initial_balance=bal)
+        else:
+            _user_paper_brokers[uid].balance = bal
+            _user_paper_brokers[uid].initial_balance = bal
+            _user_paper_brokers[uid].equity = bal
         success = True
         message = f"Switched to Paper Trading Simulator with ${bal:,.2f} initial balance."
-
-    execution_engine.broker = active_broker
-    trade_monitor.broker = active_broker
-    acc = active_broker.get_account_info()
-    risk_mgr.config["account_balance"] = acc.get("balance", 10000.0)
-    risk_mgr.config["account_currency"] = acc.get("currency", "USD")
-    prop_firm.sync_with_connected_account(
-        broker_name=acc.get("broker", broker_name),
-        balance=acc.get("balance", 10000.0),
-        equity=acc.get("equity", 10000.0),
-        server=credentials.get("server", ""),
-        currency=acc.get("currency", "USD")
-    )
-    market_data.set_broker(active_broker)
 
     # Save to user_broker_configs table specifically for this user
     conn = get_connection()
@@ -1041,38 +1082,32 @@ def connect_real_broker():
     conn.commit()
     conn.close()
 
+    user_broker = get_user_broker(uid)
+    acc = user_broker.get_account_info()
+    risk_mgr.config["account_balance"] = acc.get("balance", 10000.0)
+    risk_mgr.config["account_currency"] = acc.get("currency", "USD")
+    prop_firm.sync_with_connected_account(
+        broker_name=acc.get("broker", broker_name),
+        balance=acc.get("balance", 10000.0),
+        equity=acc.get("equity", 10000.0),
+        server=credentials.get("server", ""),
+        currency=acc.get("currency", "USD")
+    )
+
     log_audit("REAL_BROKER_CONNECTED", "INFO", message, {"broker": broker_name, "user_id": uid})
     notif_mgr.send_alert("Broker Connected", message, category="BROKER", level="success")
 
     return jsonify({
         "success": True,
         "message": message,
-        "broker": active_broker.get_account_info()
+        "broker": acc
     })
 
 @app.route("/api/broker/disconnect", methods=["POST"])
 def disconnect_real_broker():
-    global active_broker
     uid, err = ensure_authenticated()
     if err:
         return err
-
-    if active_broker != paper_broker:
-        active_broker.disconnect()
-    active_broker = paper_broker
-    execution_engine.broker = active_broker
-    trade_monitor.broker = active_broker
-    acc = active_broker.get_account_info()
-    risk_mgr.config["account_balance"] = acc.get("balance", 10000.0)
-    risk_mgr.config["account_currency"] = acc.get("currency", "USD")
-    prop_firm.sync_with_connected_account(
-        broker_name="Paper Broker",
-        balance=acc.get("balance", 10000.0),
-        equity=acc.get("equity", 10000.0),
-        server="",
-        currency=acc.get("currency", "USD")
-    )
-    market_data.set_broker(active_broker)
 
     conn = get_connection()
     cursor = conn.cursor()
@@ -1083,8 +1118,23 @@ def disconnect_real_broker():
     conn.commit()
     conn.close()
 
+    if uid in _user_paper_brokers:
+        _user_paper_brokers[uid] = PaperBroker(initial_balance=10000.0)
+
+    user_broker = get_user_broker(uid)
+    acc = user_broker.get_account_info()
+    risk_mgr.config["account_balance"] = acc.get("balance", 10000.0)
+    risk_mgr.config["account_currency"] = acc.get("currency", "USD")
+    prop_firm.sync_with_connected_account(
+        broker_name="Paper Broker",
+        balance=acc.get("balance", 10000.0),
+        equity=acc.get("equity", 10000.0),
+        server="",
+        currency=acc.get("currency", "USD")
+    )
+
     log_audit("BROKER_DISCONNECTED", "INFO", f"User {uid} disconnected real broker; reverted to Paper Simulator.")
-    return jsonify({"success": True, "broker": active_broker.get_account_info()})
+    return jsonify({"success": True, "broker": acc})
 
 @app.route("/api/broker/download-bridge-ea", methods=["GET"])
 def download_bridge_ea():
@@ -1095,7 +1145,6 @@ def download_bridge_ea():
 
 @app.route("/api/bridge/sync", methods=["POST"])
 def bridge_sync():
-    global active_broker
     data = request.json or {}
     login = data.get("login", 0)
 
@@ -1104,11 +1153,6 @@ def bridge_sync():
         return jsonify({"status": "ignored", "message": "Valid account login required. Please log into your MT5 broker account."}), 400
 
     orders = mt5_broker.update_bridge_telemetry(data)
-    # If currently paper simulator or MT5 broker, link active broker to live MT5 bridge
-    if active_broker == paper_broker or not active_broker.is_connected() or active_broker == mt5_broker:
-        active_broker = mt5_broker
-        execution_engine.broker = active_broker
-        trade_monitor.broker = active_broker
 
     return jsonify({
         "status": "ok",
@@ -1118,11 +1162,40 @@ def bridge_sync():
 
 @app.route("/api/bridge/status", methods=["GET"])
 def bridge_status():
+    uid = get_current_user_id()
+    is_linked = False
+    if uid:
+        conn = get_connection()
+        cursor = conn.cursor()
+        cursor.execute("SELECT broker FROM user_broker_configs WHERE user_id = ?", (uid,))
+        row = cursor.fetchone()
+        conn.close()
+        if row and (row["broker"] or "").lower() == "mt5":
+            is_linked = True
+
     is_active = mt5_broker.is_bridge_active()
-    return jsonify({
-        "active": is_active,
-        "account": mt5_broker.bridge_data if is_active else None
-    })
+
+    # Only return live MT5 account details to users who have linked MT5!
+    if is_linked and is_active:
+        return jsonify({
+            "active": True,
+            "linked": True,
+            "account": mt5_broker.bridge_data
+        })
+    elif is_linked and not is_active:
+        return jsonify({
+            "active": False,
+            "linked": True,
+            "account": None,
+            "message": "MT5 selected, waiting for EA connection."
+        })
+    else:
+        return jsonify({
+            "active": False,
+            "linked": False,
+            "account": None,
+            "message": "Paper Trading active. Attach EA to chart and click Check MT5 Connection to link your MT5 account."
+        })
 
 @app.route("/api/settings/mode", methods=["POST"])
 def set_trading_mode():

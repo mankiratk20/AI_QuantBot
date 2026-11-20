@@ -97,27 +97,18 @@ class AuthManager:
         cursor.execute("SELECT id, username, email FROM users WHERE LOWER(username) = LOWER(?) OR LOWER(email) = LOWER(?)", (clean_user, clean_email))
         existing = cursor.fetchone()
         if existing:
-            # Smart Re-registration / credential sync: update password & activate account immediately
-            new_hash = generate_password_hash(password)
-            cursor.execute("UPDATE users SET password_hash = ?, is_confirmed = 1 WHERE id = ?", (new_hash, existing["id"]))
-            conn.commit()
             conn.close()
-            persist_users_to_disk()
-            token = self._generate_token(existing["id"], existing["username"])
-            log_audit("USER_RE_REGISTERED", "INFO", f"User '{existing['username']}' updated credentials and logged in.", {"user_id": existing["id"]})
-            return True, "Account recognized and updated! Logging you in...", {
-                "user_id": existing["id"],
-                "username": existing["username"],
-                "email": existing["email"],
-                "token": token
-            }
+            if existing["username"].lower() == clean_user:
+                return False, f"Username '{clean_user}' is already registered. Please sign in or choose another username.", None
+            else:
+                return False, f"Email '{clean_email}' is already registered. Please sign in or reset your password.", None
 
         user_id = f"usr_{uuid.uuid4().hex[:12]}"
         password_hash = generate_password_hash(password)
         now = datetime.now(timezone.utc)
         now_str = now.isoformat()
 
-        # Insert user with is_confirmed = 0
+        # Insert user with is_confirmed = 0 (ALWAYS require OTP verification)
         cursor.execute(
             "INSERT INTO users (id, username, email, password_hash, is_confirmed, created_at) VALUES (?, ?, ?, ?, 0, ?)",
             (user_id, clean_user, clean_email, password_hash, now_str)
@@ -140,23 +131,18 @@ class AuthManager:
         persist_users_to_disk()
 
         # Send confirmation email
-        send_ok, send_msg, _ = self.email_service.send_signup_confirmation(clean_email, clean_user, otp_code)
+        send_ok, send_msg, meta = self.email_service.send_signup_confirmation(clean_email, clean_user, otp_code)
         if not send_ok:
-            # If email delivery encounters issues, auto-activate account so user is not locked out
-            conn = get_connection()
-            cursor = conn.cursor()
-            cursor.execute("UPDATE users SET is_confirmed = 1 WHERE id = ?", (user_id,))
-            conn.commit()
-            conn.close()
-            persist_users_to_disk()
-            token = self._generate_token(user_id, clean_user)
-            log_audit("USER_AUTO_ACTIVATED", "INFO", f"User '{clean_user}' auto-activated (email provider fallback).", {"user_id": user_id})
-            return True, "Account registered & activated successfully! Welcome to AI QuantBot.", {
+            log_audit("USER_REGISTER_PENDING", "WARNING", f"User '{clean_user}' registered. Confirmation OTP email issue: {send_msg}", {"user_id": user_id})
+            is_sandbox = "resend sandbox" in send_msg.lower() or meta.get("mode") in ("dev_simulation", "failed")
+            return True, f"Account created! Please enter your 6-digit confirmation code. {send_msg}", {
                 "user_id": user_id,
                 "username": clean_user,
                 "email": clean_email,
-                "is_confirmed": 1,
-                "token": token
+                "is_confirmed": 0,
+                "requires_otp": True,
+                "sandbox_code": otp_code if is_sandbox else None,
+                "email_notice": send_msg
             }
 
         log_audit("USER_REGISTER_PENDING", "INFO", f"User '{clean_user}' registered. Confirmation OTP sent to {clean_email}.", {"user_id": user_id})
@@ -165,7 +151,8 @@ class AuthManager:
             "user_id": user_id,
             "username": clean_user,
             "email": clean_email,
-            "is_confirmed": 0
+            "is_confirmed": 0,
+            "requires_otp": True
         }
 
     def confirm_signup(self, email: str, otp_code: str) -> Tuple[bool, str, Optional[Dict[str, Any]]]:
@@ -220,12 +207,14 @@ class AuthManager:
         conn.close()
         persist_users_to_disk()
 
+        token = self._generate_token(user["id"], user["username"])
         log_audit("USER_CONFIRMED", "INFO", f"User '{user['username']}' email confirmed and activated.", {"user_id": user["id"]})
 
-        return True, "Email verified successfully! You can now log in with your credentials.", {
+        return True, "Email verified successfully! Welcome to AI QuantBot.", {
             "id": user["id"],
             "username": user["username"],
-            "email": user["email"]
+            "email": user["email"],
+            "token": token
         }
 
     def resend_signup_otp(self, email: str) -> Tuple[bool, str, Optional[str]]:

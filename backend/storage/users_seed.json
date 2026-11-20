@@ -814,5 +814,53 @@
     "password_hash": "scrypt:32768:8:1$qfl2jZZZ3wN11lLd$c1d58b83787d04fecb3e5ade0ec20b4e412eb61ae0f88988af90439f2f46e153324868eb1aa1e0476a5bc239183760a1eb1df0c7e5040d1ef93f02a5e40ba819",
     "is_confirmed": 1,
     "created_at": "2026-11-20T16:17:34.690436+00:00"
+  },
+  {
+    "id": "usr_fad0da35ae56",
+    "username": "trader_08_de9484",
+    "email": "trader_08_de9484@institutional.com",
+    "password_hash": "scrypt:32768:8:1$CtN3EvxUVhCmfC6O$72396f2318ea2b5b92a565c5d8ce5b05b478d724cdcc39114d5062500d1dcbaf2b29c8a03e79ce1206c7a064afcec67003c0c7929d7939415bbf4023af9c6422",
+    "is_confirmed": 1,
+    "created_at": "2026-11-20T18:01:39.526093+00:00"
+  },
+  {
+    "id": "usr_2799175f4b12",
+    "username": "alice_ae0dd6",
+    "email": "alice_ae0dd6@quantfirm.com",
+    "password_hash": "scrypt:32768:8:1$69YhlU34OSkjfB42$33ed96621cef0f139230555afb894ba1ad07923e9d67eb495a4355158e8a4ce4f4c7420b64155ac89e8589675f1040cc013497eb1d00288c7d8170ce6ecc2609",
+    "is_confirmed": 1,
+    "created_at": "2026-11-20T18:01:43.153976+00:00"
+  },
+  {
+    "id": "usr_a3d5e42324d4",
+    "username": "bob_ae0dd6",
+    "email": "bob_ae0dd6@hedgefund.com",
+    "password_hash": "scrypt:32768:8:1$BZ6mRrOVZyclI20q$e632193cae0b99db55c032f394be253e10ff2de590e2b322e6f26e8624c57826a133d5147a6fc36b0a8bcf9d0512ad35b203c0d3b7231e7dab953f9e8b969409",
+    "is_confirmed": 1,
+    "created_at": "2026-11-20T18:01:46.576539+00:00"
+  },
+  {
+    "id": "usr_df136762ad62",
+    "username": "trader_a39ea6",
+    "email": "verified_a39ea6@quantpropfirm.com",
+    "password_hash": "scrypt:32768:8:1$tqY3AynYZIjpWnA1$0e3e4e65e7f65cee71af118c97cfaba3c9937c194d6dd298978d7b7854b6062693cb33189780cbef6792f7b2698b176caa975ec79377c317a4e6fb20e700b23a",
+    "is_confirmed": 1,
+    "created_at": "2026-11-20T18:01:50.703905+00:00"
+  },
+  {
+    "id": "usr_e836ae2afc0f",
+    "username": "userb_a39ea6",
+    "email": "userb_a39ea6@tradingco.org",
+    "password_hash": "scrypt:32768:8:1$5FJZZIOecBlLVF4P$a378cbefdc7175c489a4d12b4ed7fba126c866f18b77fd38c662d54369b54a83b45a31e66d321e5a13a23362baf1e0c7a59d8bd406fc79574e1644e75f2eb713",
+    "is_confirmed": 1,
+    "created_at": "2026-11-20T18:01:53.877366+00:00"
+  },
+  {
+    "id": "usr_4802e949fd4a",
+    "username": "test_alice_iso",
+    "email": "alice_iso@example.com",
+    "password_hash": "scrypt:32768:8:1$pW89agFG5X71nQ8j$ef323fcdbb1b17528875eb43d71905760a789efca2d14e0f63f035e34f6cea62f79359d719610c39450cb13146bb08dd66439b36927b2e36a64a5803b59bd8bb",
+    "is_confirmed": 1,
+    "created_at": "2026-11-20T18:04:08.006095+00:00"
   }
 ]

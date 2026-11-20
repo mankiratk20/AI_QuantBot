@@ -1251,12 +1251,16 @@ class SmartBotApp {
     }
     if (!label) return;
     try {
-      const res = await fetch("/api/bridge/status");
+      const res = await fetch("/api/bridge/status", {
+        headers: this.getAuthHeaders()
+      });
       const data = await res.json();
-      if (data.active && data.account) {
+      if (data.linked && data.active && data.account) {
         label.innerHTML = `<span style="color:#10b981;">🟢 Live Connected (Acc #${data.account.login || "N/A"} - $${Number(data.account.balance || 0).toLocaleString()})</span>`;
-      } else {
+      } else if (data.linked) {
         label.innerHTML = `<span style="color:#f59e0b;">⏳ Waiting for MT5 EA ping...</span>`;
+      } else {
+        label.innerHTML = `<span style="color:#94a3b8;">⚪ Disconnected (Paper Simulator Active)</span>`;
       }
     } catch (e) {
       label.innerText = "Offline";
@@ -1916,31 +1920,21 @@ class SmartBotApp {
       const data = await res.json();
 
       if (res.ok && data.success) {
-        if (data.token) {
-          this.authToken = data.token;
-          localStorage.setItem("quant_auth_token", data.token);
-          this.currentUser = { id: data.user_id, username: data.username, email: data.email };
-          this.updateAuthUI();
-          this.showToast("Account created & activated! Terminal unlocked.", "success");
-
-          const authPortal = document.getElementById("auth-portal-screen");
-          if (authPortal) authPortal.style.setProperty("display", "none", "important");
-          const sidebar = document.getElementById("app-sidebar");
-          if (sidebar) sidebar.style.setProperty("display", "flex", "important");
-          const mainWrapper = document.getElementById("app-main-wrapper");
-          if (mainWrapper) mainWrapper.style.setProperty("display", "flex", "important");
-
-          await this.initTerminalWorkspace();
-          return;
-        }
-
+        // ALWAYS require entering OTP on signup
         this.currentSignupEmail = data.email || email;
 
         const emailLabel = document.getElementById("signup-confirm-email-label");
         if (emailLabel) emailLabel.innerText = this.currentSignupEmail;
 
         this.switchAuthMode("SIGNUP_CONFIRM");
-        this.showAuthAlert("Account registered! A 6-digit confirmation code was sent to your email.", "info");
+
+        let notice = "Account registered! A 6-digit confirmation code was sent to your email.";
+        if (data.sandbox_code) {
+          notice = `Account registered! (Sandbox Mode: Your verification OTP is ${data.sandbox_code}). Enter it below to activate.`;
+        } else if (data.email_notice) {
+          notice = `Account registered! Check email for the 6-digit OTP. Note: ${data.email_notice}`;
+        }
+        this.showAuthAlert(notice, "info");
       } else {
         this.showAuthAlert(data.error || data.message || "Registration failed.");
       }
@@ -1975,10 +1969,27 @@ class SmartBotApp {
       const data = await res.json();
 
       if (res.ok && data.success) {
-        this.switchAuthMode("LOGIN_CREDENTIALS");
-        this.showAuthAlert("Email confirmed and account activated! Please sign in with your credentials.", "success");
-        const identInput = document.getElementById("login-input-ident");
-        if (identInput) identInput.value = this.currentSignupEmail;
+        if (data.user && data.user.token) {
+          this.authToken = data.user.token;
+          localStorage.setItem("quant_auth_token", data.user.token);
+          this.currentUser = { id: data.user.id, username: data.user.username, email: data.user.email };
+          this.updateAuthUI();
+          this.showToast(`Email verified! Welcome @${data.user.username}! Terminal unlocked.`, "success");
+
+          const authPortal = document.getElementById("auth-portal-screen");
+          if (authPortal) authPortal.style.setProperty("display", "none", "important");
+          const sidebar = document.getElementById("app-sidebar");
+          if (sidebar) sidebar.style.setProperty("display", "flex", "important");
+          const mainWrapper = document.getElementById("app-main-wrapper");
+          if (mainWrapper) mainWrapper.style.setProperty("display", "flex", "important");
+
+          await this.initTerminalWorkspace();
+        } else {
+          this.switchAuthMode("LOGIN_CREDENTIALS");
+          this.showAuthAlert("Email confirmed and account activated! Please sign in with your credentials.", "success");
+          const identInput = document.getElementById("login-input-ident");
+          if (identInput) identInput.value = this.currentSignupEmail;
+        }
       } else {
         this.showAuthAlert(data.error || data.message || "Invalid or expired confirmation code.");
       }

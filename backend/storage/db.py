@@ -249,6 +249,15 @@ def _seed_and_restore_users(cursor: sqlite3.Cursor, conn: sqlite3.Connection):
         )
         conn.commit()
 
+    # 3. Seed Amrit's default broker configuration (MT5 Bridge)
+    cursor.execute("SELECT user_id FROM user_broker_configs WHERE user_id = 'usr_amrit_default'")
+    if not cursor.fetchone():
+        cursor.execute(
+            "INSERT INTO user_broker_configs (user_id, broker, credentials, updated_at) VALUES (?, 'mt5', ?, ?)",
+            ("usr_amrit_default", json.dumps({"login": "bridge", "server": "bridge"}), datetime.now().isoformat())
+        )
+        conn.commit()
+
 def persist_users_to_disk():
     base_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
     git_seed_file = os.path.join(os.path.dirname(os.path.abspath(__file__)), "users_seed.json")
