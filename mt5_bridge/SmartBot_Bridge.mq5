@@ -67,7 +67,20 @@ void OnTimer()
 //+------------------------------------------------------------------+
 void SendTelemetry()
 {
-   long login        = AccountInfoInteger(ACCOUNT_LOGIN);
+   // Check if terminal is connected to a live trade server
+   if(!TerminalInfoInteger(TERMINAL_CONNECTED))
+   {
+      if(EnableVerboseLog) Print("⏳ [SmartBot Bridge] MT5 terminal is offline. Waiting to connect to trade server...");
+      return;
+   }
+
+   long login = AccountInfoInteger(ACCOUNT_LOGIN);
+   if(login <= 0)
+   {
+      if(EnableVerboseLog) Print("⏳ [SmartBot Bridge] No active broker account logged in. In MT5, click File ➜ Login to Trade Account.");
+      return;
+   }
+
    string server     = AccountInfoString(ACCOUNT_SERVER);
    string company    = AccountInfoString(ACCOUNT_COMPANY);
    string currency   = AccountInfoString(ACCOUNT_CURRENCY);

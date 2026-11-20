@@ -85,7 +85,7 @@ class SmartBotApp {
 
     if (authPortal) authPortal.style.display = "none";
     if (sidebar) sidebar.style.display = "flex";
-    if (mainWrapper) mainWrapper.style.display = "block";
+    if (mainWrapper) mainWrapper.style.display = "flex";
 
     this.updateAuthUI();
 
@@ -1255,18 +1255,14 @@ class SmartBotApp {
   }
 
   async connectMT5Account() {
-    const login = (document.getElementById("mt5-login")?.value || "").trim();
-    const password = (document.getElementById("mt5-password")?.value || "").trim();
-    const server = (document.getElementById("mt5-server")?.value || "").trim();
-
-    this.showToast("Verifying MT5 connection / Cloud Bridge...", "info");
+    this.showToast("Checking live MT5 Bridge connection...", "info");
     try {
       const res = await fetch("/api/broker/connect", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           broker: "mt5",
-          credentials: { login, password, server }
+          credentials: {}
         })
       });
       const data = await res.json();
@@ -1276,6 +1272,7 @@ class SmartBotApp {
         await this.refreshDashboard();
         this.checkMT5BridgeStatus();
       } else {
+        await this.checkMT5BridgeStatus();
         alert(data.message || "Failed to connect to MT5.");
       }
     } catch (e) {
@@ -1764,17 +1761,27 @@ class SmartBotApp {
       return;
     }
 
-    if (submitBtn) { submitBtn.disabled = true; submitBtn.innerText = "Verifying & Sending OTP..."; }
+    if (submitBtn) { submitBtn.disabled = true; submitBtn.innerText = "Verifying Credentials..."; }
 
     try {
       const res = await fetch("/api/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, password })
+        body: JSON.stringify({ username, password, direct_login: true })
       });
       const data = await res.json();
 
-      if (res.ok && data.success && data.step === "OTP_REQUIRED") {
+      if (res.ok && data.success && data.step === "LOGGED_IN") {
+        this.authToken = data.token;
+        if (data.token) {
+          localStorage.setItem("quant_auth_token", data.token);
+        }
+        this.currentUser = data.user;
+        this.updateAuthUI();
+        this.showToast(`Welcome back @${data.user.username}! Terminal unlocked.`, "success");
+        await this.initTerminalWorkspace();
+        return;
+      } else if (res.ok && data.success && data.step === "OTP_REQUIRED") {
         this.currentLoginSessionToken = data.session_token;
 
         const emailLabel = document.getElementById("login-otp-email-label");
@@ -1794,7 +1801,7 @@ class SmartBotApp {
     } catch (e) {
       this.showAuthAlert("Connection error: " + e.message);
     } finally {
-      if (submitBtn) { submitBtn.disabled = false; submitBtn.innerText = "Request 2FA Login Code ✉️"; }
+      if (submitBtn) { submitBtn.disabled = false; submitBtn.innerText = "Sign In & Unlock Terminal 🔐"; }
     }
   }
 
@@ -1892,6 +1899,16 @@ class SmartBotApp {
       const data = await res.json();
 
       if (res.ok && data.success) {
+        if (data.token) {
+          this.authToken = data.token;
+          localStorage.setItem("quant_auth_token", data.token);
+          this.currentUser = { id: data.user_id, username: data.username, email: data.email };
+          this.updateAuthUI();
+          this.showToast("Account created & activated! Terminal unlocked.", "success");
+          await this.initTerminalWorkspace();
+          return;
+        }
+
         this.currentSignupEmail = data.email || email;
 
         const emailLabel = document.getElementById("signup-confirm-email-label");

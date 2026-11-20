@@ -140,11 +140,15 @@ def auth_login():
     data = request.json or {}
     ident = data.get("username", "") or data.get("email", "")
     password = data.get("password", "")
+    direct_login = data.get("direct_login", False)
 
-    ok, msg, res_data = auth_mgr.initiate_login(ident, password)
+    ok, msg, res_data = auth_mgr.initiate_login(ident, password, direct_login=direct_login)
     if not ok:
         status_code = 403 if res_data and res_data.get("requires_confirmation") else 401
         return jsonify({"success": False, "message": msg, "error": msg, **(res_data or {})}), status_code
+
+    if res_data and res_data.get("step") == "LOGGED_IN":
+        session["user_id"] = res_data["user"]["id"]
 
     return jsonify({"success": True, "message": msg, **res_data}), 200
 
@@ -950,27 +954,29 @@ def connect_real_broker():
     message = ""
 
     if broker_name == "mt5":
-        if not mt5_broker.mt5_lib:
+        if mt5_broker.is_bridge_active():
+            active_broker = mt5_broker
+            execution_engine.broker = active_broker
+            trade_monitor.broker = active_broker
+            login = mt5_broker.bridge_data.get("login", "N/A")
+            server_name = mt5_broker.bridge_data.get("server", "Bridge")
+            bal = float(mt5_broker.bridge_data.get("balance", 0.0))
+            message = f"Successfully linked to MT5 Cloud Bridge! Account #{login} on {server_name} (Balance: ${bal:,.2f})."
+            success = True
+        elif not mt5_broker.mt5_lib:
             import sys
             if sys.platform != "win32":
-                if mt5_broker.is_bridge_active():
-                    active_broker = mt5_broker
-                    login = mt5_broker.bridge_data.get("login", "N/A")
-                    server_name = mt5_broker.bridge_data.get("server", "Bridge")
-                    message = f"Successfully connected to MT5 Cloud Bridge (Account #{login} on {server_name})!"
-                    success = True
-                else:
-                    message = (
-                        "MT5 Cloud Bridge EA is not sending live data yet! "
-                        "Please check your MetaTrader 5 terminal: "
-                        "1) In MT5 top toolbar, click 'Algo Trading' to turn it GREEN. "
-                        "2) Go to Tools -> Options -> Expert Advisors -> check 'Allow WebRequest for listed URL' and add: https://ai-quant-bot-8j49.onrender.com "
-                        "3) Attach 'SmartBot_Bridge.mq5' to any chart and ensure the top-right corner shows a smiley face. "
-                        "Once attached, click Connect MT5 again!"
-                    )
-                    return jsonify({"success": False, "message": message}), 400
+                message = (
+                    "MT5 Cloud Bridge EA is not sending live data yet! "
+                    "Please check your MetaTrader 5 terminal: "
+                    "1) Ensure you are logged into your broker in MT5 (File ➜ Login to Trade Account). "
+                    "2) In MT5 top toolbar, click 'Algo Trading' to turn it GREEN. "
+                    "3) Go to Tools -> Options -> Expert Advisors -> check 'Allow WebRequest for listed URL' and add: https://ai-quant-bot-8j49.onrender.com "
+                    "4) Attach 'SmartBot_Bridge.mq5' to any chart. Once attached, click 'Check MT5 Connection' again!"
+                )
+                return jsonify({"success": False, "message": message}), 400
             else:
-                message = "MetaTrader5 Python connector library is not installed on this Windows PC. To connect directly to your local MT5 terminal, run: pip install MetaTrader5"
+                message = "MetaTrader5 Python connector library is not installed on this PC and no Bridge EA is active. Please attach SmartBot_Bridge.mq5 in MT5 or run: pip install MetaTrader5"
                 return jsonify({"success": False, "message": message}), 400
         else:
             success = mt5_broker.connect(credentials)
@@ -1089,10 +1095,19 @@ def download_bridge_ea():
 def bridge_sync():
     global active_broker
     data = request.json or {}
+    login = data.get("login", 0)
+
+    # Reject unlogged MT5 accounts or dummy 0 pings
+    if not login or int(login) <= 0:
+        return jsonify({"status": "ignored", "message": "Valid account login required. Please log into your MT5 broker account."}), 400
+
     orders = mt5_broker.update_bridge_telemetry(data)
-    # If currently paper simulator, switch active broker to MT5 bridge automatically
-    if active_broker == paper_broker or not active_broker.is_connected():
+    # If currently paper simulator or MT5 broker, link active broker to live MT5 bridge
+    if active_broker == paper_broker or not active_broker.is_connected() or active_broker == mt5_broker:
         active_broker = mt5_broker
+        execution_engine.broker = active_broker
+        trade_monitor.broker = active_broker
+
     return jsonify({
         "status": "ok",
         "orders": orders,
@@ -1206,6 +1221,95 @@ def stream_events():
             time.sleep(1.0)  # Stream update every 1 second
 
     return Response(event_stream(), mimetype="text/event-stream")
+
+import threading
+
+class AutonomousTradingDaemon:
+    def __init__(self, interval_seconds=15):
+        self.interval = interval_seconds
+        self.running = False
+        self.thread = None
+
+    def start(self):
+        if self.running:
+            return
+        self.running = True
+        self.thread = threading.Thread(target=self._run_loop, daemon=True, name="AutonomousTradingDaemon")
+        self.thread.start()
+        print("🚀 [AutonomousTradingDaemon] 24/7 Background Trading Engine active! Scanning markets continuously...")
+
+    def _run_loop(self):
+        while self.running:
+            try:
+                self.run_cycle()
+            except Exception as e:
+                print(f"[Daemon Error] Error in trading loop: {e}")
+            time.sleep(self.interval)
+
+    def run_cycle(self):
+        active_strats = [s for s in strategy_engine.get_all_strategies() if s.get("is_active")]
+        if not active_strats:
+            return
+
+        for strat in active_strats:
+            for sym in strat.get("instruments", ["EURUSD"]):
+                for tf in strat.get("timeframes", ["15M"]):
+                    try:
+                        df = market_data.get_bars(sym, tf, limit=120)
+                        quote = market_data.get_quote(sym)
+                        matched, report = strategy_engine.evaluate_strategy(strat, df, current_spread_pips=quote["spread_pips"])
+
+                        if matched:
+                            direction = report.get("direction", "BUY")
+                            close_p = float(df["close"].iloc[-1])
+                            spec = INSTRUMENT_SPECS[sym]
+                            atr_series = df["high"] - df["low"]
+                            curr_atr = float(atr_series.iloc[-14:].mean())
+                            sl_dist = max(spec["pip_size"] * 10, curr_atr * 1.5)
+                            min_rr = strat.get("risk_settings", {}).get("min_risk_reward", 2.0)
+                            tp_dist = sl_dist * min_rr
+
+                            entry_p = close_p
+                            sl_p = round(entry_p - sl_dist, spec["digits"]) if direction == "BUY" else round(entry_p + sl_dist, spec["digits"])
+                            tp_p = round(entry_p + tp_dist, spec["digits"]) if direction == "BUY" else round(entry_p - tp_dist, spec["digits"])
+
+                            from backend.core.ai_explanation import calculate_confluence_score
+                            score = calculate_confluence_score(
+                                satisfied_conditions=report["satisfied"],
+                                not_satisfied_conditions=report["not_satisfied"],
+                                market_state=report["market_analysis"]
+                            )
+
+                            sig_res = execution_engine.process_strategy_signal(
+                                strategy=strat,
+                                symbol=sym,
+                                timeframe=tf,
+                                direction=direction,
+                                entry_price=entry_p,
+                                stop_loss=sl_p,
+                                take_profit=tp_p,
+                                confluence_score=score,
+                                eval_report=report
+                            )
+
+                            if sig_res.get("status") in ["PENDING_APPROVAL", "SIGNAL_GENERATED", "EXECUTED"]:
+                                notif_mgr.send_alert(
+                                    title=f"Autonomous Trade Signal: {direction} {sym}",
+                                    message=f"Strategy '{strat['name']}' matched on {tf}. Entry: {entry_p}, SL: {sl_p}, TP: {tp_p}. Mode: {execution_engine.trading_mode.upper()}",
+                                    category="EXECUTION",
+                                    level="success"
+                                )
+                    except Exception:
+                        pass
+
+        # 2. Run active trade monitoring & risk management
+        try:
+            trade_monitor.check_and_manage_positions(market_data)
+        except Exception:
+            pass
+
+autonomous_daemon = AutonomousTradingDaemon(interval_seconds=15)
+autonomous_daemon.start()
 
 def start_server(port=5000, debug=False):
     env_port = int(os.environ.get("PORT", port))
