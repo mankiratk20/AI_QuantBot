@@ -83,33 +83,36 @@ class SmartBotApp {
     const mainWrapper = document.getElementById("app-main-wrapper");
     const authPortal = document.getElementById("auth-portal-screen");
 
-    if (authPortal) authPortal.style.display = "none";
-    if (sidebar) sidebar.style.display = "flex";
-    if (mainWrapper) mainWrapper.style.display = "flex";
+    if (authPortal) authPortal.style.setProperty("display", "none", "important");
+    if (sidebar) sidebar.style.setProperty("display", "flex", "important");
+    if (mainWrapper) mainWrapper.style.setProperty("display", "flex", "important");
 
     this.updateAuthUI();
 
     if (this.terminalInitialized) return;
     this.terminalInitialized = true;
 
-    this.initSSEStream();
-    await this.fetchBrokerConfig();
-    await this.refreshDashboard();
+    try { this.initSSEStream(); } catch(e) { console.warn("SSE error:", e); }
+    try { await this.fetchBrokerConfig(); } catch(e) { console.warn("Broker config error:", e); }
+    try { await this.refreshDashboard(); } catch(e) { console.warn("Dashboard refresh error:", e); }
 
-    // Initialize Chart and Strategy Builder
-    if (!window.stratBuilder) {
-      window.stratBuilder = new StrategyBuilderUI();
-    } else {
-      await window.stratBuilder.fetchStrategies();
-      window.stratBuilder.renderStrategyList();
-    }
+    try {
+      if (!window.stratBuilder) {
+        window.stratBuilder = new StrategyBuilderUI();
+      } else {
+        await window.stratBuilder.fetchStrategies();
+        window.stratBuilder.renderStrategyList();
+      }
+    } catch(e) { console.warn("Strategy builder error:", e); }
 
-    if (!this.chart) {
-      this.chart = new TradingChart("main-tradingview-chart");
-    }
+    try {
+      if (!this.chart) {
+        this.chart = new TradingChart("main-tradingview-chart");
+      }
+      await this.loadChartSymbol(this.activeSymbol, this.activeTimeframe);
+    } catch(e) { console.warn("Chart error:", e); }
 
-    await this.loadChartSymbol(this.activeSymbol, this.activeTimeframe);
-    this.populateBacktestStrategies();
+    try { this.populateBacktestStrategies(); } catch(e) { console.warn("Backtest strategies error:", e); }
   }
 
   bindNavigation() {
@@ -1779,6 +1782,14 @@ class SmartBotApp {
         this.currentUser = data.user;
         this.updateAuthUI();
         this.showToast(`Welcome back @${data.user.username}! Terminal unlocked.`, "success");
+
+        const authPortal = document.getElementById("auth-portal-screen");
+        if (authPortal) authPortal.style.setProperty("display", "none", "important");
+        const sidebar = document.getElementById("app-sidebar");
+        if (sidebar) sidebar.style.setProperty("display", "flex", "important");
+        const mainWrapper = document.getElementById("app-main-wrapper");
+        if (mainWrapper) mainWrapper.style.setProperty("display", "flex", "important");
+
         await this.initTerminalWorkspace();
         return;
       } else if (res.ok && data.success && data.step === "OTP_REQUIRED") {
@@ -1905,6 +1916,14 @@ class SmartBotApp {
           this.currentUser = { id: data.user_id, username: data.username, email: data.email };
           this.updateAuthUI();
           this.showToast("Account created & activated! Terminal unlocked.", "success");
+
+          const authPortal = document.getElementById("auth-portal-screen");
+          if (authPortal) authPortal.style.setProperty("display", "none", "important");
+          const sidebar = document.getElementById("app-sidebar");
+          if (sidebar) sidebar.style.setProperty("display", "flex", "important");
+          const mainWrapper = document.getElementById("app-main-wrapper");
+          if (mainWrapper) mainWrapper.style.setProperty("display", "flex", "important");
+
           await this.initTerminalWorkspace();
           return;
         }
