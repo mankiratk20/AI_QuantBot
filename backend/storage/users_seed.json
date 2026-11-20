@@ -774,5 +774,45 @@
     "password_hash": "scrypt:32768:8:1$ZhXnY61o1zo6yCDL$a3011900227b41236d06fbf1560f978da7f7384f79049db88808263e0adcc8773d662a10dfc48d9f4cf0b971dbbbaf4ad421b850c2c67e5ae034e32c4bff50ce",
     "is_confirmed": 1,
     "created_at": "2026-11-20T14:41:18.615617+00:00"
+  },
+  {
+    "id": "usr_7c3b878a2d32",
+    "username": "trader_08_1cc5dc",
+    "email": "trader_08_1cc5dc@institutional.com",
+    "password_hash": "scrypt:32768:8:1$XUwujnCmoRkVxFxN$5a82b9f58cc51b3189dcb04560ab1165ea83a42dda9d290c8263847981dc43a76732cb405beeaf7d240ac46ca01074ac1d4b7506d0c799403d6e35026764b47c",
+    "is_confirmed": 1,
+    "created_at": "2026-11-20T16:17:22.616786+00:00"
+  },
+  {
+    "id": "usr_39619c3b63ec",
+    "username": "alice_310a61",
+    "email": "alice_310a61@quantfirm.com",
+    "password_hash": "scrypt:32768:8:1$vv7A3hQ3M5EFk0s7$ca7ea0b16200cc0563d69a5eb0f0444cad6978c1ab5ee32910834edfe1dd88cc86fed59d14403bad8517bcf8e9002db48de11cbf2b045fce660c997a8097afe7",
+    "is_confirmed": 1,
+    "created_at": "2026-11-20T16:17:25.874224+00:00"
+  },
+  {
+    "id": "usr_b65d3b5933dd",
+    "username": "bob_310a61",
+    "email": "bob_310a61@hedgefund.com",
+    "password_hash": "scrypt:32768:8:1$kaFa0GCLBAtJCmFj$d6a7680b2bcce9348fa57ba9dab753980e240c69002ecd2a3037f12824fb12ff4ccddfa61d90a8df6578b7eb9efa2364e1395f777b3ead5c61bf90c5c5363794",
+    "is_confirmed": 1,
+    "created_at": "2026-11-20T16:17:28.307659+00:00"
+  },
+  {
+    "id": "usr_d7f91004a6dc",
+    "username": "trader_169be2",
+    "email": "verified_169be2@quantpropfirm.com",
+    "password_hash": "scrypt:32768:8:1$ZPCKXRZLauohQAn8$568ef5542913c1ea189ed288b1055a082d5f65817919d6281a4b5b3a11d4aa245990046872bf1b32ed8c8ef2ad8493034dc113e4664248bdf086984728683013",
+    "is_confirmed": 1,
+    "created_at": "2026-11-20T16:17:31.368167+00:00"
+  },
+  {
+    "id": "usr_3841fb75c5f6",
+    "username": "userb_169be2",
+    "email": "userb_169be2@tradingco.org",
+    "password_hash": "scrypt:32768:8:1$qfl2jZZZ3wN11lLd$c1d58b83787d04fecb3e5ade0ec20b4e412eb61ae0f88988af90439f2f46e153324868eb1aa1e0476a5bc239183760a1eb1df0c7e5040d1ef93f02a5e40ba819",
+    "is_confirmed": 1,
+    "created_at": "2026-11-20T16:17:34.690436+00:00"
   }
 ]

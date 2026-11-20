@@ -1046,14 +1046,17 @@ class SmartBotApp {
         headers: this.getAuthHeaders()
       });
       const strategies = await res.json();
-      select.innerHTML = "";
-      strategies.forEach((strat) => {
-        const opt = document.createElement("option");
-        opt.value = strat.id;
-        const prefix = strat.user_id && strat.user_id !== "SYSTEM" ? "🔒 [Private] " : "🏛️ ";
-        opt.innerText = `${prefix}${strat.name} (${strat.strategy_type})`;
-        select.appendChild(opt);
-      });
+      if (strategies && strategies.length > 0) {
+        select.innerHTML = "";
+        strategies.forEach((strat, idx) => {
+          const opt = document.createElement("option");
+          opt.value = strat.id;
+          const prefix = strat.user_id && strat.user_id !== "SYSTEM" ? "🔒 [Private] " : "🏛️ ";
+          opt.innerText = `${prefix}${strat.name} (${strat.strategy_type})`;
+          if (idx === 0) opt.selected = true;
+          select.appendChild(opt);
+        });
+      }
     } catch (e) {
       console.warn("Failed to load backtest strategies:", e);
     }
@@ -1074,7 +1077,10 @@ class SmartBotApp {
     try {
       const res = await fetch("/api/backtest/run", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          ...this.getAuthHeaders()
+        },
         body: JSON.stringify({
           symbol,
           timeframe,
@@ -1095,8 +1101,8 @@ class SmartBotApp {
   }
 
   renderBacktestResults(data) {
-    if (data.error && !data.summary) {
-      alert("Backtest Notice: " + data.error);
+    if (data.error && (!data.summary || data.summary.total_trades === 0)) {
+      this.showToast("Backtest Notice: " + data.error, "warning");
       return;
     }
     const s = data.summary || {
