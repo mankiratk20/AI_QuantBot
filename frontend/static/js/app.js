@@ -1801,7 +1801,7 @@ class SmartBotApp {
     } catch (e) {
       this.showAuthAlert("Connection error: " + e.message);
     } finally {
-      if (submitBtn) { submitBtn.disabled = false; submitBtn.innerText = "Sign In & Unlock Terminal 🔐"; }
+      if (submitBtn) { submitBtn.disabled = false; submitBtn.innerText = "Sign In 🔐"; }
     }
   }
 
@@ -1922,7 +1922,7 @@ class SmartBotApp {
     } catch (e) {
       this.showAuthAlert("Network error during registration: " + e.message);
     } finally {
-      if (submitBtn) { submitBtn.disabled = false; submitBtn.innerText = "Register & Send Confirmation OTP ✉️"; }
+      if (submitBtn) { submitBtn.disabled = false; submitBtn.innerText = "Create Account & Unlock Terminal 🚀"; }
     }
   }
 

@@ -218,26 +218,29 @@ def init_db():
 def _seed_and_restore_users(cursor: sqlite3.Cursor, conn: sqlite3.Connection):
     from werkzeug.security import generate_password_hash
     base_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-    seed_file = os.path.join(base_dir, "data", "persisted_users.json")
+    # Tracked seed file in backend/storage/ (persists in Git across Render deployments)
+    git_seed_file = os.path.join(os.path.dirname(os.path.abspath(__file__)), "users_seed.json")
+    runtime_seed_file = os.path.join(base_dir, "data", "persisted_users.json")
 
     # 1. Restore from JSON backup if available
-    if os.path.exists(seed_file):
-        try:
-            with open(seed_file, "r", encoding="utf-8") as f:
-                saved_users = json.load(f)
-            for u in saved_users:
-                cursor.execute("SELECT id FROM users WHERE id = ? OR username = ? OR email = ?", (u.get("id"), u.get("username"), u.get("email")))
-                if not cursor.fetchone():
-                    cursor.execute(
-                        "INSERT INTO users (id, username, email, password_hash, is_confirmed, created_at) VALUES (?, ?, ?, ?, ?, ?)",
-                        (u["id"], u["username"], u["email"], u["password_hash"], u.get("is_confirmed", 1), u.get("created_at", datetime.now().isoformat()))
-                    )
-            conn.commit()
-        except Exception as e:
-            print(f"[DB Warning] Could not restore persisted users: {e}")
+    for seed_path in [git_seed_file, runtime_seed_file]:
+        if os.path.exists(seed_path):
+            try:
+                with open(seed_path, "r", encoding="utf-8") as f:
+                    saved_users = json.load(f)
+                for u in saved_users:
+                    cursor.execute("SELECT id FROM users WHERE LOWER(username) = LOWER(?) OR LOWER(email) = LOWER(?)", (u.get("username"), u.get("email")))
+                    if not cursor.fetchone():
+                        cursor.execute(
+                            "INSERT INTO users (id, username, email, password_hash, is_confirmed, created_at) VALUES (?, ?, ?, ?, ?, ?)",
+                            (u["id"], u["username"], u["email"], u["password_hash"], u.get("is_confirmed", 1), u.get("created_at", datetime.now().isoformat()))
+                        )
+                conn.commit()
+            except Exception as e:
+                print(f"[DB Warning] Could not restore persisted users from {seed_path}: {e}")
 
     # 2. Ensure default user amrit exists
-    cursor.execute("SELECT id FROM users WHERE username = ? OR email = ?", ("amrit", "workingamrit123@gmail.com"))
+    cursor.execute("SELECT id FROM users WHERE LOWER(username) = 'amrit' OR LOWER(email) = 'workingamrit123@gmail.com'")
     if not cursor.fetchone():
         default_pwd = generate_password_hash("AmritTrading2026!")
         cursor.execute(
@@ -248,7 +251,8 @@ def _seed_and_restore_users(cursor: sqlite3.Cursor, conn: sqlite3.Connection):
 
 def persist_users_to_disk():
     base_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-    seed_file = os.path.join(base_dir, "data", "persisted_users.json")
+    git_seed_file = os.path.join(os.path.dirname(os.path.abspath(__file__)), "users_seed.json")
+    runtime_seed_file = os.path.join(base_dir, "data", "persisted_users.json")
     try:
         conn = get_connection()
         cursor = conn.cursor()
@@ -256,9 +260,11 @@ def persist_users_to_disk():
         rows = cursor.fetchall()
         users_list = [dict(r) for r in rows]
         conn.close()
-        os.makedirs(os.path.dirname(seed_file), exist_ok=True)
-        with open(seed_file, "w", encoding="utf-8") as f:
-            json.dump(users_list, f, indent=2)
+
+        for out_file in [git_seed_file, runtime_seed_file]:
+            os.makedirs(os.path.dirname(out_file), exist_ok=True)
+            with open(out_file, "w", encoding="utf-8") as f:
+                json.dump(users_list, f, indent=2)
     except Exception as e:
         print(f"[DB Warning] Could not persist users: {e}")
 

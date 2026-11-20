@@ -1,0 +1,778 @@
+[
+  {
+    "id": "usr_4494c06ba23b",
+    "username": "trader_alice",
+    "email": "alice@quantfirm.com",
+    "password_hash": "scrypt:32768:8:1$1aR8cQrMG04f21JV$25b70fc53fcd0659ce331e7c2e60d0ee3b03b0c34333abcff1a052459791e3b7aa83dfc1cde873b421f19e4fc997db1dd2cd5f1e498141407bbee9b022a7dec7",
+    "is_confirmed": 0,
+    "created_at": "2026-11-18T19:02:22.366137+00:00"
+  },
+  {
+    "id": "usr_91f6cbe55941",
+    "username": "alice_d189ae",
+    "email": "alice_d189ae@quantfirm.com",
+    "password_hash": "scrypt:32768:8:1$TeS3AixQzXtyLZyX$8d5b91512fed463a1ba9ab0e66277ad5a483d2484285031bcbf57040321a7337d31134067cf74361993b78100303cfbee035ed66147b6ab76210d3447040ce9a",
+    "is_confirmed": 0,
+    "created_at": "2026-11-18T19:04:14.329807+00:00"
+  },
+  {
+    "id": "usr_744c858deb53",
+    "username": "bob_d189ae",
+    "email": "bob_d189ae@hedgefund.com",
+    "password_hash": "scrypt:32768:8:1$6hoF9bYVLKSuko82$1163ebf70dcd8ce5dcb9c0a11ec5a7dcaa11e800ef44446188d835a9c79241449b68ffea341cd49560929942c28a5a0d53020315d2239da9c4c252d146a96dc1",
+    "is_confirmed": 0,
+    "created_at": "2026-11-18T19:04:14.616556+00:00"
+  },
+  {
+    "id": "usr_ac91bf1d5791",
+    "username": "alice_51b4ef",
+    "email": "alice_51b4ef@quantfirm.com",
+    "password_hash": "scrypt:32768:8:1$nMDc5jvII7doO8Gn$5e867199124de78f33f8e32fab4dde0a12e0eb67b2979e91061814cee6596c8ef6399f9604a19f543d67e1350670a3f56af5a9da573cbd3d1821754d71e69ebf",
+    "is_confirmed": 0,
+    "created_at": "2026-11-18T19:05:51.413923+00:00"
+  },
+  {
+    "id": "usr_bcabc27b441d",
+    "username": "bob_51b4ef",
+    "email": "bob_51b4ef@hedgefund.com",
+    "password_hash": "scrypt:32768:8:1$TTD3PpXYFib7WiAX$8190a34072dac1a6f178000c4ff99e7d77be043f6e7ccf3112ecffc26ac81cea60058ab45747183b3eb96c8191ffb374f9046c8f5e8fa5d6281f1e0d5ac60133",
+    "is_confirmed": 0,
+    "created_at": "2026-11-18T19:05:52.243502+00:00"
+  },
+  {
+    "id": "usr_040fadeb24a7",
+    "username": "sab",
+    "email": "s01@gmail.com",
+    "password_hash": "scrypt:32768:8:1$x225lrNTRkcDe5gq$38d14cec97df7fd816a26478d594fa201a1a2f609079be31e91f385a2daf7793bc7100ff47a9e6bb53de2f21e85516ea25152739f8a984427e52d59208d77169",
+    "is_confirmed": 0,
+    "created_at": "2026-11-18T19:09:48.582924+00:00"
+  },
+  {
+    "id": "usr_2ee25d6199a3",
+    "username": "trader_08_5159bc",
+    "email": "trader_08_5159bc@institutional.com",
+    "password_hash": "scrypt:32768:8:1$C5Iwu3oXFHFXiw6B$ff3b1dd8962bae41655143eb3347aa93162b8da112940c67ac3c9609088c4b6411991c1fdc2ee6a7d970a3ea110ef26a6c8564ea549cb8fdb4d1f333b0f61c50",
+    "is_confirmed": 1,
+    "created_at": "2026-11-18T19:28:17.478668+00:00"
+  },
+  {
+    "id": "usr_199994849974",
+    "username": "alice_1c4e47",
+    "email": "alice_1c4e47@quantfirm.com",
+    "password_hash": "scrypt:32768:8:1$pnxuQhzsBDACOk9P$8d989461b83b0d8238b4ce27ef7927dfe73b5d73adee96ee80fa2b17e1a065a1e1e54d476d654f837af1f8ad9f7206359bfeb85cfdadae5f31f0b3d58d6d3189",
+    "is_confirmed": 1,
+    "created_at": "2026-11-18T19:28:22.325860+00:00"
+  },
+  {
+    "id": "usr_dcdb0105af37",
+    "username": "bob_1c4e47",
+    "email": "bob_1c4e47@hedgefund.com",
+    "password_hash": "scrypt:32768:8:1$oAMEpmYUiBnBz5yz$cc2fe8447c74a605c5393e1542968cff91f1958993f6a3bb9bab2c111eb46a3e3690b4a2a93b781e6a0e0f2e4bdb0541d39c6845b6684097130241f91d051c85",
+    "is_confirmed": 1,
+    "created_at": "2026-11-18T19:28:22.975045+00:00"
+  },
+  {
+    "id": "usr_a709f950de4e",
+    "username": "trader_3673cc",
+    "email": "verified_3673cc@quantpropfirm.com",
+    "password_hash": "scrypt:32768:8:1$miqFcCZLVMCwVttf$c9e2189f4da2e606adc5f3f569448d6594989742ee31c6eecef720f9ac2a092d8c2177bdcad664862dadf745e55320ff8e75bc6e536d2e2b0f7e1016331daa05",
+    "is_confirmed": 1,
+    "created_at": "2026-11-18T19:28:23.971267+00:00"
+  },
+  {
+    "id": "usr_8e31dc1834ac",
+    "username": "trader_08_edae01",
+    "email": "trader_08_edae01@institutional.com",
+    "password_hash": "scrypt:32768:8:1$667awb4tSlP1pNt2$eed1a5c2d5883fc7b152b275d9a89ca7cac70c5d6bb2f1da060d90ff8ff4a42f4a854b0cf400b99106a8f97e836cdb44b416b1fcab22da04106b0f1cc9548c67",
+    "is_confirmed": 1,
+    "created_at": "2026-11-18T19:29:06.158738+00:00"
+  },
+  {
+    "id": "usr_6156ee6895da",
+    "username": "alice_048d17",
+    "email": "alice_048d17@quantfirm.com",
+    "password_hash": "scrypt:32768:8:1$We1cgP2zjPIs15hu$57c331bce9c1ed7eb16cc57109f98eb31179474211c7ce708ccb57c9d5db1e632110b9dfc6f22d6e99f2a05da10ac16bab32f72741e75847e5a899fd1103d852",
+    "is_confirmed": 1,
+    "created_at": "2026-11-18T19:29:08.592021+00:00"
+  },
+  {
+    "id": "usr_efe8a0287dd4",
+    "username": "bob_048d17",
+    "email": "bob_048d17@hedgefund.com",
+    "password_hash": "scrypt:32768:8:1$9U7LWV5Ied6eQDii$50e76bc4ddda5751a683968e3aabd7487ed458a794a37dabac67545d4253aa24a17a49f2e61f99b9feaa619e4680a87fb379ac8d1bafc66f727b87ddb67c11bd",
+    "is_confirmed": 1,
+    "created_at": "2026-11-18T19:29:11.120600+00:00"
+  },
+  {
+    "id": "usr_59459ff405d9",
+    "username": "trader_d344fc",
+    "email": "verified_d344fc@quantpropfirm.com",
+    "password_hash": "scrypt:32768:8:1$oLUNzT1RHryJdH0K$4ffa8255738057b6e090b847271c02c67b5dac2073a22828aae2e333eadb23a95406a4b04cd783726f25a73c19c3fdcc9c4524c5d29cd63b51252636c39a14c9",
+    "is_confirmed": 1,
+    "created_at": "2026-11-18T19:29:13.458206+00:00"
+  },
+  {
+    "id": "usr_ba8506024004",
+    "username": "userb_d344fc",
+    "email": "userb_d344fc@tradingco.org",
+    "password_hash": "scrypt:32768:8:1$mXb9LWRc0PiEd6vL$7556c5a082524b3a156e85be99fddc0c3b5811fc68aad6f519e1077cf631bf23f8304b5dec59c9e8e144e1b1f3c726f94c8d9e01f170b8011e7e0b6fb588db29",
+    "is_confirmed": 1,
+    "created_at": "2026-11-18T19:29:14.178809+00:00"
+  },
+  {
+    "id": "usr_ca78f600dc54",
+    "username": "trader_08_65dcf6",
+    "email": "trader_08_65dcf6@institutional.com",
+    "password_hash": "scrypt:32768:8:1$EENIJukCIqHnFTO8$b27b86c8611161cab17c051b1159f3b292eb5f723071df111e941fa5c5e00bb3a9b048b5272a147d0a3437bc98ee48103578ec6e7c8e43b79e1dab3f0898d8b6",
+    "is_confirmed": 1,
+    "created_at": "2026-11-18T19:30:15.227928+00:00"
+  },
+  {
+    "id": "usr_ffe8a675458c",
+    "username": "alice_3e48c2",
+    "email": "alice_3e48c2@quantfirm.com",
+    "password_hash": "scrypt:32768:8:1$bnERjYzaxJYJYCV7$485ed171904dcf9b72a51d45d4f10a270dcef3af31e7a5be8bdd5243f31b46add7c16b282d089dd15e4934e4b4b05ed11935bcf39f266616df88bbec6aeb8f31",
+    "is_confirmed": 1,
+    "created_at": "2026-11-18T19:30:16.396362+00:00"
+  },
+  {
+    "id": "usr_f6ae735926f8",
+    "username": "bob_3e48c2",
+    "email": "bob_3e48c2@hedgefund.com",
+    "password_hash": "scrypt:32768:8:1$7RsrZ37O4eXYXZP8$bbbcd1eb0448a7b5f6b5bb86947f7eacee8cfd6c397cb3dc302dffd168fbdfc6e8d4a2dc66ef81221900681f77cb2bb4d67e4f51962431f5de397b10c4f6b7e5",
+    "is_confirmed": 1,
+    "created_at": "2026-11-18T19:30:17.159969+00:00"
+  },
+  {
+    "id": "usr_76d227f96707",
+    "username": "trader_12a9e3",
+    "email": "verified_12a9e3@quantpropfirm.com",
+    "password_hash": "scrypt:32768:8:1$6ByDbb5nupk9gLoq$aaec193648bd194dc93b219649f189ec323389b9625d0e7da8b4af6eff9cfff44ae01d6d372ce8548675820b23998d75eefb0f58c1e9b2aa70866870495ab47a",
+    "is_confirmed": 1,
+    "created_at": "2026-11-18T19:30:18.090752+00:00"
+  },
+  {
+    "id": "usr_19c2706705d6",
+    "username": "userb_12a9e3",
+    "email": "userb_12a9e3@tradingco.org",
+    "password_hash": "scrypt:32768:8:1$VHKcrtz4vELJg3l4$f5873f7a0c964b8ce7953f48f197a79096bf5abe1a6a5f40c841f0e708bc07b8f74567e9855c73ea82b5fbf69ba63fbc03c185d7644db1de134e55b9219eb70f",
+    "is_confirmed": 1,
+    "created_at": "2026-11-18T19:30:19.264316+00:00"
+  },
+  {
+    "id": "usr_c1953218f6d8",
+    "username": "hello",
+    "email": "hello@gmail.com",
+    "password_hash": "scrypt:32768:8:1$M0zHylv7o0waOQSe$291377852d8b6195786e6f1328de2a0907471b92ab12140c4f8c2630336e11991916bf32fb71535046ed1a5ee35a4927820d383cd2942da6b39552a7322dace0",
+    "is_confirmed": 1,
+    "created_at": "2026-11-18T19:32:02.786824+00:00"
+  },
+  {
+    "id": "usr_208f6a73d452",
+    "username": "amrit",
+    "email": "workingamrit123@gmail.com",
+    "password_hash": "scrypt:32768:8:1$oJbLvXLmDKEnSmSq$ca41ac011d49927430b7f2205b4935b0c7f9690538b9dfa5168d35600e72e08faf3e4b775b1c3d67d7fd92b38ace8e1aaa004d23a3b3e295e8563447cdd61357",
+    "is_confirmed": 1,
+    "created_at": "2026-11-18T19:36:24.902219+00:00"
+  },
+  {
+    "id": "usr_4ca755eb8fa3",
+    "username": "trader_08_830a9a",
+    "email": "trader_08_830a9a@institutional.com",
+    "password_hash": "scrypt:32768:8:1$CJQFrZBADnXxRLZK$d313c6ed8c550dec2765a57d6da590aa9f14a269159e2ffe7c7250ae52f16c25f7a7c16da62a9e6c2f745b83b97d19466f2671b035be2ffc5bc6f54fe9088d0b",
+    "is_confirmed": 1,
+    "created_at": "2026-11-18T19:48:57.233484+00:00"
+  },
+  {
+    "id": "usr_94e6ade5195b",
+    "username": "alice_42c828",
+    "email": "alice_42c828@quantfirm.com",
+    "password_hash": "scrypt:32768:8:1$MA1TGPdkr4Ywxt7g$02628effaea8b6daccce4f8314e3a08c3b1cdc19c04112e6d12e0af198e7225d484b6bbb6d7c3e56e77d84859df29c9c0425613a4f4a81a5ec657d94c1ea6412",
+    "is_confirmed": 1,
+    "created_at": "2026-11-18T19:49:00.394896+00:00"
+  },
+  {
+    "id": "usr_245c3ae6d5ac",
+    "username": "bob_42c828",
+    "email": "bob_42c828@hedgefund.com",
+    "password_hash": "scrypt:32768:8:1$MvIzNGxM2HOYYvC6$9a27f33fbe46e74ed9455c964bd8a069bf2290b397eac4e6cf3b8350f0156819986393175b11f5060f076ed146ee4372b80da8acf75b349ebea4d75e54360061",
+    "is_confirmed": 1,
+    "created_at": "2026-11-18T19:49:01.138814+00:00"
+  },
+  {
+    "id": "usr_801ee2e6cdfc",
+    "username": "trader_15d6da",
+    "email": "verified_15d6da@quantpropfirm.com",
+    "password_hash": "scrypt:32768:8:1$Q95kAOt2gF1GdY7y$099a6d24f9229234027cf4c2eaec25983466e09876cb823e2c23d3af46e05027c947c6302ba8f0b8d25845406c632d8a108efe624c1c9d8e36fb8365d569eb5b",
+    "is_confirmed": 1,
+    "created_at": "2026-11-18T19:49:02.483273+00:00"
+  },
+  {
+    "id": "usr_ebe32c3bb163",
+    "username": "userb_15d6da",
+    "email": "userb_15d6da@tradingco.org",
+    "password_hash": "scrypt:32768:8:1$1e115fbY1tpitk38$f3c4cb2afa5569327a4ab94abd69620764871c564b44700224b13ebf3021246890f7fb253008945105ac010ab96af47473da0ab46159c7e182a6f2903fb192d0",
+    "is_confirmed": 1,
+    "created_at": "2026-11-18T19:49:03.877065+00:00"
+  },
+  {
+    "id": "usr_5e05b3d18344",
+    "username": "trader_08_962627",
+    "email": "trader_08_962627@institutional.com",
+    "password_hash": "scrypt:32768:8:1$WzuQ2Byu4LPfC9NQ$aeac33d79417dc9ad0f4a65076c57baa8764ab72204937610ad98718d2d7a0df6c38e754f50f3718aa59c2520342e93da49f5e9c785c87b6fef7788c2404a3ec",
+    "is_confirmed": 1,
+    "created_at": "2026-11-18T19:57:09.462405+00:00"
+  },
+  {
+    "id": "usr_3ff0a364462a",
+    "username": "alice_c9fae1",
+    "email": "alice_c9fae1@quantfirm.com",
+    "password_hash": "scrypt:32768:8:1$34zoktkD6RclaWdk$529a0db693a8f5a64e11294482ebbef1e688b84c44c9197925070665cc23201312e47622dcaec5d1f2d7ce7d2b95b88ece5ed1a402deeaafc6451207f0f356d7",
+    "is_confirmed": 1,
+    "created_at": "2026-11-18T19:57:11.435670+00:00"
+  },
+  {
+    "id": "usr_bfa284dd9f55",
+    "username": "bob_c9fae1",
+    "email": "bob_c9fae1@hedgefund.com",
+    "password_hash": "scrypt:32768:8:1$sgfg5ORD5I8Hhrp7$369eed5d6e3c241bd9da0b92da76112bb7afd307c4db55a4ae01ad2bed5dc410eb7a6c3c0ecea82636725389b4ae0f7bb5b818a3657b9a4160a56df38ce57a5c",
+    "is_confirmed": 1,
+    "created_at": "2026-11-18T19:57:12.658253+00:00"
+  },
+  {
+    "id": "usr_0c4b3b354f7e",
+    "username": "trader_4820f2",
+    "email": "verified_4820f2@quantpropfirm.com",
+    "password_hash": "scrypt:32768:8:1$NcwYP1Vfe39Mr8zH$072a9492865de07328cdaed598c17806408606941da37e8fa293d0825f7d82f4accfc94ec582da6899de8bba90f7a86b39c392b0d471b8192e6f682361fb6d5a",
+    "is_confirmed": 1,
+    "created_at": "2026-11-18T19:57:14.159495+00:00"
+  },
+  {
+    "id": "usr_0e16678bff5b",
+    "username": "userb_4820f2",
+    "email": "userb_4820f2@tradingco.org",
+    "password_hash": "scrypt:32768:8:1$rMOpMmwCxNaGtrAv$0e2076ed5475222276081fdb3add7fed32561e3c448c1f5310c58cf64855429465e985a979bd7456ba73b5817cda82376865bfd1b120edc95be9d2f8ceea1fe6",
+    "is_confirmed": 1,
+    "created_at": "2026-11-18T19:57:15.287089+00:00"
+  },
+  {
+    "id": "usr_39e0b8ff5838",
+    "username": "trader_08_6c533c",
+    "email": "trader_08_6c533c@institutional.com",
+    "password_hash": "scrypt:32768:8:1$isosZMH0VpWeq3Sc$e4f01a6c403f3d547a93b1998582c67ce74d65bc38668a563059c7f3e847c2429063a923906805891a8aef198805b495de86cbea2a785031de304b215c59a9a9",
+    "is_confirmed": 1,
+    "created_at": "2026-11-18T20:13:23.299125+00:00"
+  },
+  {
+    "id": "usr_610c21004d0a",
+    "username": "alice_111d90",
+    "email": "alice_111d90@quantfirm.com",
+    "password_hash": "scrypt:32768:8:1$uHmlrjnh4f2gMmth$a6fe4f12c8e920b4348bb9a27ba356241712f02142400fe92e1b0126e059b23cfe5eaa81b2d630a77a479856786a2d981256aed161d76186389a779c636a668a",
+    "is_confirmed": 1,
+    "created_at": "2026-11-18T20:13:24.615590+00:00"
+  },
+  {
+    "id": "usr_b48764d070e5",
+    "username": "bob_111d90",
+    "email": "bob_111d90@hedgefund.com",
+    "password_hash": "scrypt:32768:8:1$J2ItI8o0Pdr6TcZi$8676d54a89a2016ebb9e4586d06feb8afa4b1e045560d60e31ad7632dd58e6b061f5f17a69c715dc22f75e7ae19699ca22e665207c6baeed6fade9c73f73b92d",
+    "is_confirmed": 1,
+    "created_at": "2026-11-18T20:13:25.526877+00:00"
+  },
+  {
+    "id": "usr_1223f8a59f62",
+    "username": "trader_a2884d",
+    "email": "verified_a2884d@quantpropfirm.com",
+    "password_hash": "scrypt:32768:8:1$SW2FsdSDmIeSfUUv$d4c1bf3e8a53bd9d2ab056c182d194bfbcdf7cc1219af656a5f87e4573351693f5e036914b7528cef6062f351dd2e0bac50af0fb0c2dc888690d8770e6de965b",
+    "is_confirmed": 1,
+    "created_at": "2026-11-18T20:13:26.732264+00:00"
+  },
+  {
+    "id": "usr_df4523acb670",
+    "username": "userb_a2884d",
+    "email": "userb_a2884d@tradingco.org",
+    "password_hash": "scrypt:32768:8:1$J3FMV5qo5UGqVeXj$398389e82c559170308f5ecfd5e32bf69994682a9e30aab0cf5fe895c2dc9a7908521a5d340d14fb7594e18df3e615d1466be9ef5df01818b6042639c1bc7673",
+    "is_confirmed": 1,
+    "created_at": "2026-11-18T20:13:27.949758+00:00"
+  },
+  {
+    "id": "usr_be7facc8c81c",
+    "username": "trader_08_aa9933",
+    "email": "trader_08_aa9933@institutional.com",
+    "password_hash": "scrypt:32768:8:1$5eyp4ssfJFyAhlP8$e088b473326786ee4ba6fae87f10f858a73d01555b38ce81cd1d1f684514d9c5178e357066d2398637fc738042c3f3ceab94f8d56d978e7c403540c31dcf1ad4",
+    "is_confirmed": 1,
+    "created_at": "2026-11-19T10:06:42.704830+00:00"
+  },
+  {
+    "id": "usr_f5caa168c066",
+    "username": "alice_2428be",
+    "email": "alice_2428be@quantfirm.com",
+    "password_hash": "scrypt:32768:8:1$URiZbOK0bZ3vqwl2$5f56d8645ab8fccfe11dbd9408b216d396d749242b53afaa132bc2093dc74aadd49591da15793249e37a4a17d08fed06ef0193d6a49a34a11f7354ee3a9cfd00",
+    "is_confirmed": 1,
+    "created_at": "2026-11-19T10:06:45.664690+00:00"
+  },
+  {
+    "id": "usr_4882388784b4",
+    "username": "bob_2428be",
+    "email": "bob_2428be@hedgefund.com",
+    "password_hash": "scrypt:32768:8:1$QAzFADV8bgDxllMa$d3e2463c8eb7bc965bc17ef708aa0aa84997032e9a3daef5ff53ef9581954092964694e19bf501299572b76b508977f75afaa330bbf2fa2e5234d128fd21020f",
+    "is_confirmed": 1,
+    "created_at": "2026-11-19T10:06:47.289995+00:00"
+  },
+  {
+    "id": "usr_bdb29109b971",
+    "username": "trader_9dedcd",
+    "email": "verified_9dedcd@quantpropfirm.com",
+    "password_hash": "scrypt:32768:8:1$nT3QN27bMSdBa0ZG$fe4bd4e81ea8f9d971af642af4942cc3b21a60a1ad01fc5419f390aa57e698c0dafad4c9754fb8af90639510fb9ed7f2da40cac025d842ab98ab5095a3ad6504",
+    "is_confirmed": 1,
+    "created_at": "2026-11-19T10:06:49.448604+00:00"
+  },
+  {
+    "id": "usr_26d3f4dcd8f9",
+    "username": "userb_9dedcd",
+    "email": "userb_9dedcd@tradingco.org",
+    "password_hash": "scrypt:32768:8:1$vOovkjUot3fBjgOE$6b13b2db59be28478cbe7c8c1d7966b8155b1c994c42f1cfa9ef6b9330ef7f1453ba97d77af83018bf473b804eb7d23b2c19e1a5bb6aae6f1bff205c120ced6e",
+    "is_confirmed": 1,
+    "created_at": "2026-11-19T10:06:52.284077+00:00"
+  },
+  {
+    "id": "usr_5e7a6de77f09",
+    "username": "trader_08_fbe004",
+    "email": "trader_08_fbe004@institutional.com",
+    "password_hash": "scrypt:32768:8:1$lioOlvBDpNFjBAKK$0bc3bc7ca89d3ea22ff6927b487c4b3e4ae552617607de964bdb99159a2e945cc55d6753e71adfaff16c456933c8cd9e8faf7137ea1f935304a342a56b4443d7",
+    "is_confirmed": 1,
+    "created_at": "2026-11-19T10:32:27.152927+00:00"
+  },
+  {
+    "id": "usr_580a1df79224",
+    "username": "alice_40210a",
+    "email": "alice_40210a@quantfirm.com",
+    "password_hash": "scrypt:32768:8:1$JysSsNzOOyJM0lBV$40dd7f9011b321399dec2f6d35651954f1a6d44608f9b7431e2be06844aa341e432ba921b8400dfc0b011b7d7c57bf2e7cd806853ddb7b0d3f032e5f5f92845e",
+    "is_confirmed": 1,
+    "created_at": "2026-11-19T10:32:29.678812+00:00"
+  },
+  {
+    "id": "usr_0022ead17179",
+    "username": "bob_40210a",
+    "email": "bob_40210a@hedgefund.com",
+    "password_hash": "scrypt:32768:8:1$9XKW2yd1a9dpO8PJ$7377f6fd7b383aeaf675c4b2eb4ce866db0bd470fce3d0005287c6cc562d9614cdd5afa3807f51f9e07e21550c992f93932da4f82da53b62307c3fdc6fb4f314",
+    "is_confirmed": 1,
+    "created_at": "2026-11-19T10:32:31.107123+00:00"
+  },
+  {
+    "id": "usr_7d94f25f4b4c",
+    "username": "trader_0ce785",
+    "email": "verified_0ce785@quantpropfirm.com",
+    "password_hash": "scrypt:32768:8:1$c6UIAdRdtWZdfFqY$5430b556df2ba23e004e8ddae7bf4daa64b6e04323bf7b2b5ff4d696f80c9f93623744e4c93b288d3cd008801ccc4b10bf62288a18bbb204a5f63e59a5360e80",
+    "is_confirmed": 1,
+    "created_at": "2026-11-19T10:32:33.315136+00:00"
+  },
+  {
+    "id": "usr_5ed9935bdd59",
+    "username": "userb_0ce785",
+    "email": "userb_0ce785@tradingco.org",
+    "password_hash": "scrypt:32768:8:1$wlhflerSxTXqZeT0$f1ef5c425dd6a94851dd5637781eabc88b57d23de4b207fb29f394d872be915b3bbb670f7d6f492e99e1482723569eba2074d6410ec8ea3d2b0a0c03a55a92f9",
+    "is_confirmed": 1,
+    "created_at": "2026-11-19T10:32:35.461996+00:00"
+  },
+  {
+    "id": "usr_6649b142d5af",
+    "username": "trader_08_3b0a0e",
+    "email": "trader_08_3b0a0e@institutional.com",
+    "password_hash": "scrypt:32768:8:1$OHAP6iegDkFBZzFj$a9208c30132afb5cabfc2371e082c4367262f0870de3e8ef8ae5bb48ac10e43e846efe91d393a4aa57ef8b0d660ee48601b042e754af302ffe792a113a04203f",
+    "is_confirmed": 1,
+    "created_at": "2026-11-19T10:39:31.231205+00:00"
+  },
+  {
+    "id": "usr_0318d283cb37",
+    "username": "alice_f485d6",
+    "email": "alice_f485d6@quantfirm.com",
+    "password_hash": "scrypt:32768:8:1$pbhK4wEq2UrB41JM$fb0f428a7fdfc3f0feba1e3b7b26aef55ab94654e4b47f59ceb619fd2ac9118c7ebccb2fbb09f5776c2192ab2988419d110481d260743df923e4d92fd03b43b5",
+    "is_confirmed": 1,
+    "created_at": "2026-11-19T10:39:35.494891+00:00"
+  },
+  {
+    "id": "usr_92c157180d03",
+    "username": "bob_f485d6",
+    "email": "bob_f485d6@hedgefund.com",
+    "password_hash": "scrypt:32768:8:1$uc3r5NInqGvdeFoY$097ef4c11fe6685d4e64d58441da4bf3b94e9714fe05d30fd4cc3b8f0ff58ea8c503d7b36d16091bf6733ad0afeb8b5de4253c096adca8837904274200c578e4",
+    "is_confirmed": 1,
+    "created_at": "2026-11-19T10:39:37.630936+00:00"
+  },
+  {
+    "id": "usr_4c5818e9622d",
+    "username": "trader_d20e80",
+    "email": "verified_d20e80@quantpropfirm.com",
+    "password_hash": "scrypt:32768:8:1$FglaojEIjJQ7G23Q$4e0c6eec34c7c2d78dad91ac59008dd149f3a9dac3d6429c3772e0202e5507d8747dbabb6e8d455150c7fd75abb1505bddf0cdf71623efc52860e0590a4343a1",
+    "is_confirmed": 1,
+    "created_at": "2026-11-19T10:39:38.332582+00:00"
+  },
+  {
+    "id": "usr_13d089a1ae49",
+    "username": "userb_d20e80",
+    "email": "userb_d20e80@tradingco.org",
+    "password_hash": "scrypt:32768:8:1$DMWZHqB6Y2i0ZNA7$ec816f4276e1373da1ee6c47d12c2f2afbaf869869a1541cf744a54730a98a4cc23d73725a9d1f07efc302aec068f333b78437d8adcae08a6516407159c38359",
+    "is_confirmed": 1,
+    "created_at": "2026-11-19T10:39:39.307096+00:00"
+  },
+  {
+    "id": "usr_43fd6f9a16d4",
+    "username": "trader_08_a44e5f",
+    "email": "trader_08_a44e5f@institutional.com",
+    "password_hash": "scrypt:32768:8:1$tDwrt0AqUF4Sp9Fl$30b5a807d4089ee5d51af5636ee78aed9143b4a7a34de699b9e48402106d468b7d04b0b23fa87b915b1fa9d2f433f3bf2a74b94e8c3043d44f308d34e52a855f",
+    "is_confirmed": 1,
+    "created_at": "2026-11-19T12:48:16.323102+00:00"
+  },
+  {
+    "id": "usr_11c2a9e423f1",
+    "username": "alice_ddad4c",
+    "email": "alice_ddad4c@quantfirm.com",
+    "password_hash": "scrypt:32768:8:1$BaRcSiDoZOTlTx98$05b27f4eac74ae326ec94eb865cc60fb758c05eb488052040c8e866cb6a433ad2891116f9e69d951e20405b4cbc0a6e18c82ba30c8cbd14abf2dd263c0c7ac36",
+    "is_confirmed": 1,
+    "created_at": "2026-11-19T12:48:18.286459+00:00"
+  },
+  {
+    "id": "usr_88005eb1ccfe",
+    "username": "bob_ddad4c",
+    "email": "bob_ddad4c@hedgefund.com",
+    "password_hash": "scrypt:32768:8:1$z736mu64EHsR7Iri$80fa105ba3c6295f5c1f0acd06b018e24008339940ada14e867e671dcb00395fd54441b2ff0c25a17fb8ffb4012208d4f76a88cbbad93d69909cf08bd670f3fd",
+    "is_confirmed": 1,
+    "created_at": "2026-11-19T12:48:19.520560+00:00"
+  },
+  {
+    "id": "usr_c1139a7ba105",
+    "username": "trader_7b1bbb",
+    "email": "verified_7b1bbb@quantpropfirm.com",
+    "password_hash": "scrypt:32768:8:1$qewPEatnETdo8Csh$f8d63bb611930f307a4e8625b1cc1a971e6b70f13adbb87ab0cf22e36f8c4b4c5e93e0a1860b97d04e04fb797fdab7c5b1cd76f527f1e194bac3d75e535460d5",
+    "is_confirmed": 1,
+    "created_at": "2026-11-19T12:48:21.245932+00:00"
+  },
+  {
+    "id": "usr_75f983505091",
+    "username": "userb_7b1bbb",
+    "email": "userb_7b1bbb@tradingco.org",
+    "password_hash": "scrypt:32768:8:1$WYT4nELPfU1GMOYq$39bc625832f0a0b1256bed0d59a601df73a47010dbedd60dcffe058547b0c9769578384b47575b6e124c0a8c54430166351f1ecd37c9943d3f1e6d43e2a07436",
+    "is_confirmed": 1,
+    "created_at": "2026-11-19T12:48:23.552688+00:00"
+  },
+  {
+    "id": "usr_36d720853f75",
+    "username": "khushi",
+    "email": "singhamrit2589@gmail.com",
+    "password_hash": "scrypt:32768:8:1$lNLMJziX2ZNmiw5n$1e009b62c70b50346623cc82b0946f930838086c0884a17ef8c234efa5e8dc38123e0f6237e01b9eed576e43b73c94373890e3123bc8789066cacc24059dd51e",
+    "is_confirmed": 1,
+    "created_at": "2026-11-19T14:07:57.542146+00:00"
+  },
+  {
+    "id": "usr_8ab745e68baa",
+    "username": "trader_08_d96205",
+    "email": "trader_08_d96205@institutional.com",
+    "password_hash": "scrypt:32768:8:1$KGHwjsckwjqkIym0$99ea317303f1213ae8aa068ae69d79898006f4b37df21139673fe7249a400b5f9c45a374b17e1152fa833780979559b4a5655c8da7e44074c914b5a39dc31ca1",
+    "is_confirmed": 1,
+    "created_at": "2026-11-19T14:18:58.980745+00:00"
+  },
+  {
+    "id": "usr_1d953cf70047",
+    "username": "alice_77a708",
+    "email": "alice_77a708@quantfirm.com",
+    "password_hash": "scrypt:32768:8:1$h8ej3e4rhNc8gIFF$abd315a684b8925851288b5bc9f8187b3c40e038711cbf2a8cee56b71b79a4fb4f554bde2af9a5042ada9d43d49abb7545dbfa103a1657582bf47fb8add12356",
+    "is_confirmed": 1,
+    "created_at": "2026-11-19T14:19:01.050308+00:00"
+  },
+  {
+    "id": "usr_a7bc4181f2a8",
+    "username": "bob_77a708",
+    "email": "bob_77a708@hedgefund.com",
+    "password_hash": "scrypt:32768:8:1$h4zECahyn2Ad9GDn$58d4874f34c1cdef554d7d74891fc34a84cbf995f376252b8c77d26817b6b2bd4e82811fd5de79864d468c0cdcc1b88b32e7d96dfdb011957ee36de52cbb14eb",
+    "is_confirmed": 1,
+    "created_at": "2026-11-19T14:19:02.027514+00:00"
+  },
+  {
+    "id": "usr_b2b2f8a3daf5",
+    "username": "trader_3f6052",
+    "email": "verified_3f6052@quantpropfirm.com",
+    "password_hash": "scrypt:32768:8:1$gswBgyGltNwlNVCq$0030954a40055fef40f77a9e43367585b1d1e3730937823a40271aaf379bb6a368e3d1880e43fd85db6409870cff7b288d468bf5a004240b8d6d768633a2cdd1",
+    "is_confirmed": 1,
+    "created_at": "2026-11-19T14:19:03.512360+00:00"
+  },
+  {
+    "id": "usr_fe77b9b5bf8b",
+    "username": "userb_3f6052",
+    "email": "userb_3f6052@tradingco.org",
+    "password_hash": "scrypt:32768:8:1$5zqBK4dueyZ1jDRV$5a6f8f056b7b870f97ee135f49683fcc328fa9fe2fa3e2f42ca7ff6683444337d0ccad2e9270ac467e89c7f5237ec7c84b5a2c0bb65d69bd5648513ec63be27a",
+    "is_confirmed": 1,
+    "created_at": "2026-11-19T14:19:05.246670+00:00"
+  },
+  {
+    "id": "usr_a098076d8476",
+    "username": "trader_08_5f93ee",
+    "email": "trader_08_5f93ee@institutional.com",
+    "password_hash": "scrypt:32768:8:1$74CO3d6kkrlUqRJw$ac10d2f16e96f5482e7f56124559686ccb572c0a1b44479caf2864c89706dbecc5d9c0967c26378a14564598e24d778f19851f1df2572ac549617463defb4ee4",
+    "is_confirmed": 1,
+    "created_at": "2026-11-19T19:04:12.846514+00:00"
+  },
+  {
+    "id": "usr_50af5325926e",
+    "username": "alice_97e72c",
+    "email": "alice_97e72c@quantfirm.com",
+    "password_hash": "scrypt:32768:8:1$0rZPwwKS50szIVR5$c543a0ccde1ed326e07fbe83601dc3e5200ab51dc1235ffe6937ee23a45ecb38b6ebff7a039f95b7f4369ef53c28bdf24747a62c36a17392f1d8f10190b95e82",
+    "is_confirmed": 1,
+    "created_at": "2026-11-19T19:04:16.377216+00:00"
+  },
+  {
+    "id": "usr_9447919565b7",
+    "username": "bob_97e72c",
+    "email": "bob_97e72c@hedgefund.com",
+    "password_hash": "scrypt:32768:8:1$Kcp8q4mQVho6Bpn5$4781aff1c7e746b69ef9acc7be03b62bfbe8ef9deaf6b944da8fda69eba053aff5f35fbe488ab546041d0f9f42a2fe662d5d3bc81b7f188e04f65219adf780be",
+    "is_confirmed": 1,
+    "created_at": "2026-11-19T19:04:17.413329+00:00"
+  },
+  {
+    "id": "usr_7938e8e03f8b",
+    "username": "trader_60b581",
+    "email": "verified_60b581@quantpropfirm.com",
+    "password_hash": "scrypt:32768:8:1$zraZg6KTA8lPXCb1$c425c2ce76fad5cfd759272790272a44bd83c76292f5675b61ab31749b533c1395ed950317246f865b3f753633e8cb09538cbdc76e280803926839218bf42179",
+    "is_confirmed": 1,
+    "created_at": "2026-11-19T19:04:18.541092+00:00"
+  },
+  {
+    "id": "usr_c6933ea7d8d0",
+    "username": "userb_60b581",
+    "email": "userb_60b581@tradingco.org",
+    "password_hash": "scrypt:32768:8:1$GQ9S7G7vTs2KRJZS$c18058102c6db7e2c3128d6ca628922d45418f669a4f9e976ef4dca316ea79ad58fed9761921c3291cba8471844d5cfdd07518f7664ff3ff0577ada01d541017",
+    "is_confirmed": 1,
+    "created_at": "2026-11-19T19:04:20.726604+00:00"
+  },
+  {
+    "id": "usr_39c2a22fe9f8",
+    "username": "trader_08_a7f6b6",
+    "email": "trader_08_a7f6b6@institutional.com",
+    "password_hash": "scrypt:32768:8:1$MXo5fm6z3FIWxXQr$1bb513ef5b32ca80a0ebfc1713f95ed97727807ac188d356e967f4515b0c197f46caf6c3c477833e9821852958c182cc382d6cc276c03d2d6a78580bfef16f9e",
+    "is_confirmed": 1,
+    "created_at": "2026-11-19T19:24:04.130942+00:00"
+  },
+  {
+    "id": "usr_c1c4f1d527f0",
+    "username": "alice_30e2e5",
+    "email": "alice_30e2e5@quantfirm.com",
+    "password_hash": "scrypt:32768:8:1$efl8DM6AqfBuQTBY$12f645e84108cd2e8f4125c784aa864cefe2af0af5cfa4e288ec13a4053ee79925e70bb6bb78323e0ee4396586186c4d424d8db76dd644c2999157cfc34f5f56",
+    "is_confirmed": 1,
+    "created_at": "2026-11-19T19:24:10.499485+00:00"
+  },
+  {
+    "id": "usr_a91630987695",
+    "username": "bob_30e2e5",
+    "email": "bob_30e2e5@hedgefund.com",
+    "password_hash": "scrypt:32768:8:1$d2fYfrc0aWTcjt74$9783dcd15ab53b3ddea8c53222afa7f32cc6033e89e5c6b99138a8156f1ab8b2b81710174c394d1ccf94bf82a4fd4dad3a5450813db5ff20a420eadc502e0968",
+    "is_confirmed": 1,
+    "created_at": "2026-11-19T19:24:12.101735+00:00"
+  },
+  {
+    "id": "usr_4cbd34f5a554",
+    "username": "trader_e81abb",
+    "email": "verified_e81abb@quantpropfirm.com",
+    "password_hash": "scrypt:32768:8:1$3aujxKc7XV9APtvE$62080391bae0bbe3b9a83405a0f917e584a7760b8e43d610f1c462b73f4a52545ea8fba06c82f2a1526b6554b191feb63f91ff1a7be541b3201d94e2fc3dba88",
+    "is_confirmed": 1,
+    "created_at": "2026-11-19T19:24:16.883066+00:00"
+  },
+  {
+    "id": "usr_4cff179dd5a1",
+    "username": "userb_e81abb",
+    "email": "userb_e81abb@tradingco.org",
+    "password_hash": "scrypt:32768:8:1$8uE9OZNwcU1O7Vhj$8a1be83b5f562f5d8dac44211fea191518e414902134645dfc2cffdaa4ae309901c0e8d391ead3a50571ebc777b358a807e466bba40a71d6277ffd7994d3cb05",
+    "is_confirmed": 1,
+    "created_at": "2026-11-19T19:24:19.459493+00:00"
+  },
+  {
+    "id": "usr_0c4b38a5b470",
+    "username": "trader_08_77da34",
+    "email": "trader_08_77da34@institutional.com",
+    "password_hash": "scrypt:32768:8:1$N3z72ZwbfiHsWU7D$70327f976557334998ea0fa11d29b2b7a563593ce5d2d3463b88e3ef311c7b3369cb0e6d36d8450a623632e20f65b3f6369681593abbad5bf062744bbe9519f4",
+    "is_confirmed": 1,
+    "created_at": "2026-11-19T20:06:26.540874+00:00"
+  },
+  {
+    "id": "usr_4f443f12f3e1",
+    "username": "alice_f556fd",
+    "email": "alice_f556fd@quantfirm.com",
+    "password_hash": "scrypt:32768:8:1$TBu7EA55SDEc9uXV$b9479b30cdfd220e34caf93066977faf0a6f560491a78be603a8ba1048b567c12a9f8b7c6a0ca291b99ad908aad05a33b5bbd8170519c8ac526b0c90961890d7",
+    "is_confirmed": 1,
+    "created_at": "2026-11-19T20:06:34.291354+00:00"
+  },
+  {
+    "id": "usr_292452fd2aed",
+    "username": "bob_f556fd",
+    "email": "bob_f556fd@hedgefund.com",
+    "password_hash": "scrypt:32768:8:1$ZMV0Fc1RSE467sO9$10056d3897e1ee09ad3db2781b34f7e0e0358a2d6b4bc32d12f67608e3684499f4d82d0576e55ee0f3e86b59b290d0041fac3fb410dbe1bd549e4ac0f4744e9e",
+    "is_confirmed": 1,
+    "created_at": "2026-11-19T20:06:35.992443+00:00"
+  },
+  {
+    "id": "usr_46c2affb11d1",
+    "username": "trader_d0c63c",
+    "email": "verified_d0c63c@quantpropfirm.com",
+    "password_hash": "scrypt:32768:8:1$PDK9K0gDN2NjqxsD$f64d4f8b50d3ad3b52862d9435543995c0a3f50e847f9d3023b18f903a2ad0d8cd5c5394658ca22805b02486aa262d39c585d4b15d853f39cae018a41200b1ea",
+    "is_confirmed": 1,
+    "created_at": "2026-11-19T20:06:40.349194+00:00"
+  },
+  {
+    "id": "usr_f9fc1c92dc9c",
+    "username": "userb_d0c63c",
+    "email": "userb_d0c63c@tradingco.org",
+    "password_hash": "scrypt:32768:8:1$3ZKdPJFusOUzGJdK$a44792350a1ffb3dbe1bcf8aa4b9949d8196b7db104dae78a5d74ec18292e349b3a0072b1051ddd446a786904463090e0bc35c3e3611938437c7ab1dbce7aec5",
+    "is_confirmed": 1,
+    "created_at": "2026-11-19T20:06:45.893527+00:00"
+  },
+  {
+    "id": "usr_d340d6220ab1",
+    "username": "trader_08_6880da",
+    "email": "trader_08_6880da@institutional.com",
+    "password_hash": "scrypt:32768:8:1$cismcveev3a0SWFl$ab35af406d79596208765765de8028f2a16c54fa0ec0df1845da18b348b70d633ced998f5cb488dd615c9390f8f61500d7db8d495338a6543098bfbfca05890e",
+    "is_confirmed": 1,
+    "created_at": "2026-11-20T10:48:48.070394+00:00"
+  },
+  {
+    "id": "usr_9024e0cd5cd7",
+    "username": "alice_dc4353",
+    "email": "alice_dc4353@quantfirm.com",
+    "password_hash": "scrypt:32768:8:1$m8X3GxKHaa5bZ3q7$d0bce4885636461848e6832256113c0dd292ae1f03059887a06aafd8d7b6084ba4e678d0a20c0f21e58dd5d5c8c4bcdcaf5c099ec87a0417253b03ebdf8fa726",
+    "is_confirmed": 1,
+    "created_at": "2026-11-20T10:48:49.467919+00:00"
+  },
+  {
+    "id": "usr_41adf0e5305a",
+    "username": "bob_dc4353",
+    "email": "bob_dc4353@hedgefund.com",
+    "password_hash": "scrypt:32768:8:1$sFhgbWPxPRvJsEJI$e9b5b06f4d32c947f38640d6b682cb42f2a3d7979b4e1a4280993e3f2ff4b730c6c8bf383ba47956fb443134bf6a94320262bb9ee9199f265c9b0c62e16531da",
+    "is_confirmed": 1,
+    "created_at": "2026-11-20T10:48:50.360625+00:00"
+  },
+  {
+    "id": "usr_0014e3358057",
+    "username": "trader_a481d3",
+    "email": "verified_a481d3@quantpropfirm.com",
+    "password_hash": "scrypt:32768:8:1$VsgsUiRNxvpjZoz0$b0685e0db3b30f2c88f93b31711179da4db87a462c47cc73f444f48e437dee75ee079673186621aeb5b2f90c1d42ed9696f09775384ff09ea37d0961c2fd02c4",
+    "is_confirmed": 1,
+    "created_at": "2026-11-20T10:48:51.646766+00:00"
+  },
+  {
+    "id": "usr_6b6cf93920f8",
+    "username": "userb_a481d3",
+    "email": "userb_a481d3@tradingco.org",
+    "password_hash": "scrypt:32768:8:1$RpJR0xpnjrXKGAsK$1bb7be8bf9bde6157c5afe20e3a8988aea7f0dab048067da76b55e6acb191c10cbd82f939043615155cf382b3059f21514baa5e4edff23eaca474d878dfa9b42",
+    "is_confirmed": 1,
+    "created_at": "2026-11-20T10:48:53.194417+00:00"
+  },
+  {
+    "id": "usr_a1a82ea305ed",
+    "username": "trader_08_e6c50d",
+    "email": "trader_08_e6c50d@institutional.com",
+    "password_hash": "scrypt:32768:8:1$zyJRy82dtqIW9kCq$8a944fb9966e0f9164d84bc09748a14f38f6c30789d28054d26746fed14c3aed2203bd112e4bc8db015eb5a3e925ff5f26a37caa534e51ae54d47a707c93570b",
+    "is_confirmed": 1,
+    "created_at": "2026-11-20T14:30:16.131095+00:00"
+  },
+  {
+    "id": "usr_7b7fbc2837b9",
+    "username": "alice_bd2ffb",
+    "email": "alice_bd2ffb@quantfirm.com",
+    "password_hash": "scrypt:32768:8:1$gBQv8leBlmX6Dxc8$c583d0ca2ea3c3eebfc015e7d3b86c931459ad44ca783aed5df3ce96ded2bc226c672e956ec222df533422f0c4289ca8d3b8fe91dd70569e6674166e9a1534dd",
+    "is_confirmed": 1,
+    "created_at": "2026-11-20T14:30:23.143280+00:00"
+  },
+  {
+    "id": "usr_866dfe3b5c85",
+    "username": "bob_bd2ffb",
+    "email": "bob_bd2ffb@hedgefund.com",
+    "password_hash": "scrypt:32768:8:1$3ctWV4EYFoYDx6E8$ac664b37560766f6fcbeaf6537421baaf438b9928b1c24caed5f717d3c9b458a47e2591ca160c31688ebba054d018f27d2070c40d42034de6aaa692594f9ead7",
+    "is_confirmed": 1,
+    "created_at": "2026-11-20T14:30:24.799829+00:00"
+  },
+  {
+    "id": "usr_c79a6dac6e47",
+    "username": "trader_e06c50",
+    "email": "verified_e06c50@quantpropfirm.com",
+    "password_hash": "scrypt:32768:8:1$5lADm9AWUxrCRLxc$6e59805c4c5b7ec38937e99ce89b4e4aaf101dd864f76f6b2807a4488cdd73aa51ef3ae398f3eba6355a6fe70319d3719b366ff8b8b29b506a53e138a2c121b2",
+    "is_confirmed": 1,
+    "created_at": "2026-11-20T14:30:29.690946+00:00"
+  },
+  {
+    "id": "usr_cbc7a9ae1e72",
+    "username": "userb_e06c50",
+    "email": "userb_e06c50@tradingco.org",
+    "password_hash": "scrypt:32768:8:1$6HKSLOluVDiLDUVW$31e803baf766963006bf8b8042d3be5f70a90731c5a8ed3792b7af136da2eb3173338b22ca287498ed45dbca433271a3d34e5134365d2ece122b501d18347480",
+    "is_confirmed": 1,
+    "created_at": "2026-11-20T14:30:32.355800+00:00"
+  },
+  {
+    "id": "usr_cf060a336afb",
+    "username": "trader_08_9e0a11",
+    "email": "trader_08_9e0a11@institutional.com",
+    "password_hash": "scrypt:32768:8:1$s54CvceraYq3HDTB$b5188cb63c4fa07a147964113626c6b761217d5dea543d54d6975e6fc9c32fd678d61dce50e13696ca948610cc5212d3be229f86451a563afb61dd15bd070abc",
+    "is_confirmed": 1,
+    "created_at": "2026-11-20T14:38:28.619573+00:00"
+  },
+  {
+    "id": "usr_510bafc61710",
+    "username": "alice_ad13e9",
+    "email": "alice_ad13e9@quantfirm.com",
+    "password_hash": "scrypt:32768:8:1$oHagSQuR0oYPoHw9$4de26d889f751ab7a9c11198a9274ebc14dc45b5237a83c86efe0e2505bf209c451b2bfc6b78c7d7739bb84871c2a540271c43e3e56c2cd0823f3f8c15f80e2f",
+    "is_confirmed": 1,
+    "created_at": "2026-11-20T14:38:31.096865+00:00"
+  },
+  {
+    "id": "usr_40328085db56",
+    "username": "bob_ad13e9",
+    "email": "bob_ad13e9@hedgefund.com",
+    "password_hash": "scrypt:32768:8:1$1Xj0Ve5dPXkfG4Qe$9cd7093ad23f9bd99fc2a508adc4c75155fc0c8d4d9124e1a6baf02ba708a57f00134addbf99fd436581e817f15bb8f280dc52909b25ca735f54a058975e7aae",
+    "is_confirmed": 1,
+    "created_at": "2026-11-20T14:38:32.575471+00:00"
+  },
+  {
+    "id": "usr_a043232574b4",
+    "username": "user_085f20",
+    "email": "trader@domain..com",
+    "password_hash": "scrypt:32768:8:1$DVARg9tmZ84JqbtV$55681c46116e9f5c9a8bcf6443e7b1a5cafb5535bbcb617f01026a257afd3f67edfa70ab0e29098545d9d113bced9b7198dfddfc9dbab04e482100813cf56a57",
+    "is_confirmed": 1,
+    "created_at": "2026-11-20T14:38:34.531385+00:00"
+  },
+  {
+    "id": "usr_c940e7d570bb",
+    "username": "trader_08_b54b25",
+    "email": "trader_08_b54b25@institutional.com",
+    "password_hash": "scrypt:32768:8:1$0MXuzAoYnV2OReG5$27b0f23ce6d20f256ccdfc71211b9a3663c78bf29a69731a391243e11593bedbeb315ac9cfc48f02eeb3599a3eb4cf45292c29fb31b5eec9cf35e8fcc287fc29",
+    "is_confirmed": 1,
+    "created_at": "2026-11-20T14:40:52.322790+00:00"
+  },
+  {
+    "id": "usr_caf90be7f957",
+    "username": "alice_979be8",
+    "email": "alice_979be8@quantfirm.com",
+    "password_hash": "scrypt:32768:8:1$21RjDnCryQU2T0Yr$6cdf108b74b132dc077cdb064c61ad2d9ce88738b31eb59cb2c7b8da35419a2a48ab71c109ddd5cfdbc975b64cffca1c9f32d06823f31dc267480eebad193b5e",
+    "is_confirmed": 1,
+    "created_at": "2026-11-20T14:41:03.394751+00:00"
+  },
+  {
+    "id": "usr_0473703e0ee4",
+    "username": "bob_979be8",
+    "email": "bob_979be8@hedgefund.com",
+    "password_hash": "scrypt:32768:8:1$geyWQFlvg9yW2etG$3e6d13a16e169161f4c6c77e44782094dcd52fe4c728ec3bfc19b0a7fb2fd0c373e4503053c1efb779963391e11056fa5980114fef3126a85af65b7badb4f080",
+    "is_confirmed": 1,
+    "created_at": "2026-11-20T14:41:10.872689+00:00"
+  },
+  {
+    "id": "usr_4d20048a5def",
+    "username": "trader_a61aea",
+    "email": "verified_a61aea@quantpropfirm.com",
+    "password_hash": "scrypt:32768:8:1$YMx9G2lYeVnuGlBw$bab02a9e4b0d4f6f1f80638adb6e9d916d465a58ceeddb13d1c1189239ec45ed724e7872ba386db218b7592592fce2445e98d1d47b4fb32afc96c3f2bd5dd53f",
+    "is_confirmed": 1,
+    "created_at": "2026-11-20T14:41:15.616418+00:00"
+  },
+  {
+    "id": "usr_f2b312e309c6",
+    "username": "userb_a61aea",
+    "email": "userb_a61aea@tradingco.org",
+    "password_hash": "scrypt:32768:8:1$ZhXnY61o1zo6yCDL$a3011900227b41236d06fbf1560f978da7f7384f79049db88808263e0adcc8773d662a10dfc48d9f4cf0b971dbbbaf4ad421b850c2c67e5ae034e32c4bff50ce",
+    "is_confirmed": 1,
+    "created_at": "2026-11-20T14:41:18.615617+00:00"
+  }
+]

@@ -17,25 +17,28 @@ from typing import Dict, Any, Tuple, Optional
 from datetime import datetime, timezone, timedelta
 from backend.storage.db import get_connection, log_audit
 
-# Strict RFC-compliant email regular expression
+# Standard robust email regular expression
 EMAIL_REGEX = re.compile(
-    r"^(?!\.)(?!.*\.\.)[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)+$"
+    r"^[^@\s]+@[^@\s]+\.[^@\s]+$"
 )
 
 # Common invalid disposable/placeholder domains
-DISALLOWED_DOMAINS = {"example.com", "test.com", "localhost", "fake.com", "sample.org"}
+DISALLOWED_DOMAINS = {"fake.com", "localhost"}
 
 
 def validate_email_address(email: str, allow_example_domains: bool = False) -> Tuple[bool, str]:
     """
-    Validates an email address ensuring valid syntax, domain, and TLD structure.
+    Validates an email address ensuring valid syntax and basic structure.
     """
     if not email or not isinstance(email, str):
         return False, "Email address is required."
 
-    cleaned = email.strip()
-    if len(cleaned) < 6 or len(cleaned) > 254:
-        return False, "Email must be between 6 and 254 characters."
+    cleaned = email.strip().lower()
+    if len(cleaned) < 5 or len(cleaned) > 254:
+        return False, "Email must be between 5 and 254 characters."
+
+    if ".." in cleaned:
+        return False, "Invalid email format. Email cannot contain consecutive dots."
 
     if not EMAIL_REGEX.match(cleaned):
         return False, "Invalid email format. Please provide a valid email (e.g., trader@firm.com)."
@@ -54,8 +57,8 @@ def validate_email_address(email: str, allow_example_domains: bool = False) -> T
         return False, "Email domain must contain a valid top-level domain (e.g., .com, .io)."
 
     tld = domain_parts[-1]
-    if len(tld) < 2 or not tld.isalpha():
-        return False, f"Invalid top-level domain '.{tld}'. TLD must be alphabetic and at least 2 characters."
+    if len(tld) < 2:
+        return False, f"Invalid top-level domain '.{tld}'. TLD must be at least 2 characters."
 
     if not allow_example_domains and domain in DISALLOWED_DOMAINS:
         return False, f"Domain '@{domain}' is a test/placeholder domain and cannot receive verification emails."
